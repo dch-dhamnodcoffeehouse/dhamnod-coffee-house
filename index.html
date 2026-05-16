@@ -462,6 +462,8 @@ window.sendOrderToFirebase = async function(cart,total){
 
 const tokenNumber = Math.floor(1000 + Math.random() * 9000);
 
+alert("NEW TOKEN SYSTEM ACTIVE");
+
 const orderData = {
 
 token: tokenNumber,
@@ -477,6 +479,8 @@ status: "Pending",
 time: new Date().toLocaleString()
 
 };
+
+console.log(orderData);
 
 await push(ref(db,"orders"),orderData);
 
