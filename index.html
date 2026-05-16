@@ -460,7 +460,11 @@ const db = getDatabase(app);
 
 window.sendOrderToFirebase = async function(cart,total){
 
+const tokenNumber = Math.floor(1000 + Math.random() * 9000);
+
 const orderData = {
+
+token: tokenNumber,
 
 customer: "Website Customer",
 
