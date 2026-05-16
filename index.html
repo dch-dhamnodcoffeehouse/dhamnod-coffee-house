@@ -408,14 +408,17 @@
         updateCartCount(); renderCartItems();
     }
 
-    function placeOrderWhatsApp() {
+    async function placeOrderWhatsApp() {
         const whatsappNumber = "918982628715"; 
         if (cart.length === 0) return;
         let msg = "DCH Cafe Order:\n\n";
         let total = 0;
         cart.forEach((item, i) => { msg += `${i+1}. ${item.name} (x${item.quantity}) - ₹${item.price * item.quantity}\n`; total += item.price * item.quantity; });
         msg += `\nTotal: ₹${total}`;
- sendOrderToFirebase(cart,total);       window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+
+ await sendOrderToFirebase(cart,total);
+
+window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function showToast(msg) { const t = document.getElementById('item-toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
