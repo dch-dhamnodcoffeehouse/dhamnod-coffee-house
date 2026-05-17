@@ -569,6 +569,32 @@ time: new Date().toLocaleString()
 
 };
 
+fetch("https://script.google.com/macros/s/AKfycbyUqWaDSRkPuevc8xhKJUSwijtr1oIVHhXYeO931l0IhW9KF45AKBuxMEV7xavzwqqv/exec", {
+
+method: "POST",
+
+body: JSON.stringify({
+
+token: tokenNumber,
+
+customer: customerName,
+
+phone: customerPhone,
+
+items: cart.map(item => `${item.name} x${item.quantity}`).join(", "),
+
+total: total,
+
+status: "Pending",
+
+time: new Date().toLocaleString()
+
+})
+
+});
+
+};
+
 };
 
 </script>
