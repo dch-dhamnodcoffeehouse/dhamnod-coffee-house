@@ -48,6 +48,13 @@ body{
     cursor:pointer;
 }
 
+.section-title{
+    margin-top:35px;
+    margin-bottom:20px;
+    font-size:1.5rem;
+    font-weight:bold;
+}
+
 .orders-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
@@ -60,7 +67,11 @@ body{
     padding:20px;
     border-left:6px solid orange;
     box-shadow:0 8px 20px rgba(0,0,0,0.25);
-    animation:fadeIn 0.3s ease;
+}
+
+.completed-card{
+    border-left:6px solid #2ecc71;
+    opacity:0.9;
 }
 
 .order-number{
@@ -87,7 +98,13 @@ body{
     font-size:1.2rem;
     font-weight:bold;
     color:#8fff8f;
-    margin-bottom:18px;
+    margin-bottom:10px;
+}
+
+.time{
+    color:#aaa;
+    margin-bottom:15px;
+    font-size:0.9rem;
 }
 
 .status{
@@ -102,9 +119,9 @@ body{
 
 .empty{
     text-align:center;
-    margin-top:80px;
+    margin-top:40px;
     color:#aaa;
-    font-size:1.5rem;
+    font-size:1.2rem;
 }
 
 .popup{
@@ -116,17 +133,8 @@ body{
     color:white;
     padding:18px 22px;
     border-radius:14px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.3);
     font-weight:bold;
     z-index:9999;
-    opacity:0;
-    transform:translateY(-20px);
-    transition:0.3s;
-}
-
-.popup.show{
-    opacity:1;
-    transform:translateY(0);
 }
 
 .action-buttons{
@@ -156,39 +164,6 @@ body{
 
 .complete{
     background:#e74c3c;
-}
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(10px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-@media(max-width:768px){
-
-body{
-    padding:14px;
-}
-
-.title{
-    font-size:1.5rem;
-}
-
-.order-card{
-    padding:16px;
-}
-
-.popup{
-    left:15px;
-    right:15px;
-    top:15px;
-}
-
 }
 
 </style>
@@ -226,13 +201,17 @@ onclick="window.location.href='analytics.html'">
 
 </div>
 
-<div class="orders-grid">
-
-<div class="empty">
-Waiting for live orders...
+<div class="section-title">
+🟠 Active Orders
 </div>
 
+<div class="orders-grid" id="activeOrders"></div>
+
+<div class="section-title">
+✅ Completed Orders
 </div>
+
+<div class="orders-grid" id="completedOrders"></div>
 
 <audio id="orderSound">
 <source src="https://assets.mixkit.co/active_storage/sfx/2868/2868-preview.mp3" type="audio/mpeg">
@@ -256,19 +235,9 @@ const popup = document.getElementById('popup');
 
 popup.style.display = 'block';
 
-popup.classList.add('show');
-
 setTimeout(()=>{
-
-popup.classList.remove('show');
-
-setTimeout(()=>{
-
 popup.style.display = 'none';
-
-},300);
-
-},4000);
+},3000);
 
 }
 
@@ -282,25 +251,18 @@ import {
 getDatabase,
 ref,
 onValue,
-remove,
 update
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
-
-authDomain: "dashboard-dch-a9904.firebaseapp.com",
-
-databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
-
-projectId: "dashboard-dch-a9904",
-
-storageBucket: "dashboard-dch-a9904.firebasestorage.app",
-
-messagingSenderId: "413889905968",
-
-appId: "1:413889905968:web:747b9a22aa95536f9074f5"
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_AUTH_DOMAIN",
+databaseURL: "YOUR_DATABASE_URL",
+projectId: "YOUR_PROJECT_ID",
+storageBucket: "YOUR_STORAGE_BUCKET",
+messagingSenderId: "YOUR_SENDER_ID",
+appId: "YOUR_APP_ID"
 
 };
 
@@ -308,19 +270,15 @@ const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
 
-const ordersGrid = document.querySelector('.orders-grid');
+const activeOrders = document.getElementById('activeOrders');
+
+const completedOrders = document.getElementById('completedOrders');
 
 const orderSound = document.getElementById('orderSound');
 
 const ordersRef = ref(db, 'orders');
 
-let previousCount = null;
-
-window.completeOrder = async function(orderId){
-
-await remove(ref(db, `orders/${orderId}`));
-
-}
+let previousCount = 0;
 
 window.updateStatus = async function(orderId,status){
 
@@ -330,17 +288,27 @@ status:status
 
 }
 
+window.completeOrder = async function(orderId){
+
+await update(ref(db, `orders/${orderId}`),{
+status:"Completed"
+});
+
+}
+
 onValue(ordersRef, (snapshot) => {
 
-ordersGrid.innerHTML = '';
+activeOrders.innerHTML = '';
+
+completedOrders.innerHTML = '';
 
 const data = snapshot.val();
 
 if(!data){
 
-ordersGrid.innerHTML = `
+activeOrders.innerHTML = `
 <div class="empty">
-No live orders yet...
+No orders yet
 </div>
 `;
 
@@ -350,7 +318,20 @@ return;
 
 const ordersArray = Object.entries(data).reverse();
 
-if(previousCount !== null && ordersArray.length > previousCount){
+const activeList = [];
+const completedList = [];
+
+ordersArray.forEach(order => {
+
+if(order[1].status === "Completed"){
+completedList.push(order);
+}else{
+activeList.push(order);
+}
+
+});
+
+if(activeList.length > previousCount){
 
 orderSound.play();
 
@@ -358,13 +339,19 @@ showPopup();
 
 }
 
-previousCount = ordersArray.length;
+previousCount = activeList.length;
 
-ordersArray.forEach(([id, order]) => {
+const finalOrders = [...activeList, ...completedList];
+
+finalOrders.forEach(([id, order]) => {
+
+const isCompleted = order.status === "Completed";
 
 const card = document.createElement('div');
 
-card.className = 'order-card';
+card.className = isCompleted
+? 'order-card completed-card'
+: 'order-card';
 
 card.innerHTML = `
 
@@ -387,9 +374,15 @@ ${order.items.map(item =>
 ₹${order.total}
 </div>
 
+<div class="time">
+🕒 ${order.time || "No Time"}
+</div>
+
 <div class="status">
 ${order.status || "Pending"}
 </div>
+
+${!isCompleted ? `
 
 <div class="action-buttons">
 
@@ -410,9 +403,15 @@ Complete
 
 </div>
 
+` : ''}
+
 `;
 
-ordersGrid.appendChild(card);
+if(isCompleted){
+completedOrders.appendChild(card);
+}else{
+activeOrders.appendChild(card);
+}
 
 });
 
