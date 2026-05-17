@@ -33,7 +33,6 @@ body{
     background:#1d1d1d;
     padding:25px;
     border-radius:18px;
-    box-shadow:0 8px 20px rgba(0,0,0,0.3);
 }
 
 .card-title{
@@ -47,21 +46,10 @@ body{
     font-weight:bold;
 }
 
-.green{
-    color:#2ecc71;
-}
-
-.orange{
-    color:#f39c12;
-}
-
-.blue{
-    color:#3498db;
-}
-
-.red{
-    color:#e74c3c;
-}
+.green{ color:#2ecc71; }
+.orange{ color:#f39c12; }
+.blue{ color:#3498db; }
+.red{ color:#e74c3c; }
 
 .items-box{
     margin-top:30px;
@@ -77,18 +65,6 @@ body{
     border-bottom:1px solid #333;
 }
 
-@media(max-width:768px){
-
-body{
-    padding:14px;
-}
-
-.card-value{
-    font-size:1.6rem;
-}
-
-}
-
 </style>
 
 </head>
@@ -102,39 +78,23 @@ body{
 <div class="stats-grid">
 
 <div class="card">
-<div class="card-title">
-Total Revenue
-</div>
-<div class="card-value green" id="revenue">
-₹0
-</div>
+<div class="card-title">Total Revenue</div>
+<div class="card-value green" id="revenue">₹0</div>
 </div>
 
 <div class="card">
-<div class="card-title">
-Total Orders
-</div>
-<div class="card-value blue" id="orders">
-0
-</div>
+<div class="card-title">Total Orders</div>
+<div class="card-value blue" id="orders">0</div>
 </div>
 
 <div class="card">
-<div class="card-title">
-Pending Orders
-</div>
-<div class="card-value orange" id="pending">
-0
-</div>
+<div class="card-title">Active Orders</div>
+<div class="card-value orange" id="pending">0</div>
 </div>
 
 <div class="card">
-<div class="card-title">
-Completed Orders
-</div>
-<div class="card-value red" id="completed">
-0
-</div>
+<div class="card-title">Completed Orders</div>
+<div class="card-value red" id="completed">0</div>
 </div>
 
 </div>
@@ -146,9 +106,7 @@ Completed Orders
 </h2>
 
 <div id="topItems">
-
 No data yet
-
 </div>
 
 </div>
@@ -165,19 +123,13 @@ onValue
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
-
-authDomain: "dashboard-dch-a9904.firebaseapp.com",
-
-databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
-
-projectId: "dashboard-dch-a9904",
-
-storageBucket: "dashboard-dch-a9904.firebasestorage.app",
-
-messagingSenderId: "413889905968",
-
-appId: "1:413889905968:web:747b9a22aa95536f9074f5"
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_AUTH_DOMAIN",
+databaseURL: "YOUR_DATABASE_URL",
+projectId: "YOUR_PROJECT_ID",
+storageBucket: "YOUR_STORAGE_BUCKET",
+messagingSenderId: "YOUR_SENDER_ID",
+appId: "YOUR_APP_ID"
 
 };
 
@@ -186,13 +138,9 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const revenueEl = document.getElementById('revenue');
-
 const ordersEl = document.getElementById('orders');
-
 const pendingEl = document.getElementById('pending');
-
 const completedEl = document.getElementById('completed');
-
 const topItemsEl = document.getElementById('topItems');
 
 const ordersRef = ref(db, 'orders');
@@ -202,18 +150,13 @@ onValue(ordersRef, (snapshot)=>{
 const data = snapshot.val();
 
 if(!data){
-
 return;
-
 }
 
 let revenue = 0;
-
 let totalOrders = 0;
-
-let pending = 0;
-
-let completed = 0;
+let activeOrders = 0;
+let completedOrders = 0;
 
 let itemStats = {};
 
@@ -223,14 +166,10 @@ totalOrders++;
 
 revenue += Number(order.total || 0);
 
-if(order.status === "Ready"){
-
-completed++;
-
+if(order.status === "Completed"){
+completedOrders++;
 }else{
-
-pending++;
-
+activeOrders++;
 }
 
 if(order.items){
@@ -238,9 +177,7 @@ if(order.items){
 order.items.forEach(item=>{
 
 if(!itemStats[item.name]){
-
 itemStats[item.name] = 0;
-
 }
 
 itemStats[item.name] += item.quantity;
@@ -252,12 +189,9 @@ itemStats[item.name] += item.quantity;
 });
 
 revenueEl.innerText = `₹${revenue}`;
-
 ordersEl.innerText = totalOrders;
-
-pendingEl.innerText = pending;
-
-completedEl.innerText = completed;
+pendingEl.innerText = activeOrders;
+completedEl.innerText = completedOrders;
 
 const sortedItems = Object.entries(itemStats)
 .sort((a,b)=>b[1]-a[1]);
@@ -280,7 +214,7 @@ topItemsEl.innerHTML += `
 
 });
 
-}); 
+});
 
 </script>
 
