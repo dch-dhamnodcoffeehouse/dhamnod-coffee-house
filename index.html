@@ -415,7 +415,6 @@ if(cart.length === 0) return;
 document.getElementById("customerModal").style.display = "flex";
 
 }
-
 window.submitCustomerDetails = async function(){
 
 const customerName = document.getElementById("customerName").value;
@@ -450,6 +449,10 @@ total += item.price * item.quantity;
 
 msg += `\nTotal: ₹${total}`;
 
+
+// SAFE FIREBASE
+try {
+
 if(window.sendOrderToFirebase){
 
 await window.sendOrderToFirebase(
@@ -461,6 +464,14 @@ customerPhone
 
 }
 
+} catch(error){
+
+console.log(error);
+
+}
+
+
+// WHATSAPP
 window.open(
 `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`,
 '_blank'
@@ -477,7 +488,6 @@ document.getElementById("customerModal").style.display = "none";
 showToast("Order Sent Successfully 🔥");
 
 }
-
         
 
 
