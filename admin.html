@@ -48,13 +48,6 @@ body{
     cursor:pointer;
 }
 
-.section-title{
-    margin-top:35px;
-    margin-bottom:20px;
-    font-size:1.5rem;
-    font-weight:bold;
-}
-
 .orders-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
@@ -166,6 +159,13 @@ body{
     background:#e74c3c;
 }
 
+.section-title{
+    margin-top:35px;
+    margin-bottom:20px;
+    font-size:1.5rem;
+    font-weight:bold;
+}
+
 @media(max-width:768px){
 
 body{
@@ -232,20 +232,24 @@ Waiting for live orders...
 <div class="orders-grid" id="completedOrders"></div>
 
 <audio id="orderSound" preload="auto">
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=warning-alarm-buzzer-99193.mp3" type="audio/mpeg">
+<source src="alarm.ogg" type="audio/ogg">
+Your browser does not support audio.
 </audio>
 
 <script>
 
 let soundEnabled = false;
 
-async function enableSound(){
+function enableSound(){
 
 const sound = document.getElementById('orderSound');
 
-try{
+sound.volume = 1;
 
-await sound.play();
+sound.currentTime = 0;
+
+sound.play()
+.then(()=>{
 
 sound.pause();
 
@@ -253,15 +257,38 @@ sound.currentTime = 0;
 
 soundEnabled = true;
 
-alert("🔔 Sound Enabled Successfully");
+alert("🔔 Sound Enabled ✅");
 
-}catch(err){
-
-alert("Tap again to enable sound");
+})
+.catch(err=>{
 
 console.log(err);
 
+alert("Tap again to allow sound");
+
+});
+
 }
+
+function playAlarm(){
+
+if(!soundEnabled) return;
+
+const sound = document.getElementById('orderSound');
+
+sound.volume = 1;
+
+sound.currentTime = 0;
+
+sound.play().catch(err => console.log(err));
+
+setTimeout(()=>{
+
+sound.currentTime = 0;
+
+sound.play().catch(err => console.log(err));
+
+},3000);
 
 }
 
@@ -275,7 +302,7 @@ setTimeout(()=>{
 
 popup.style.display = 'none';
 
-},3000);
+},4000);
 
 }
 
@@ -317,8 +344,6 @@ const db = getDatabase(app);
 const activeOrders = document.getElementById('activeOrders');
 
 const completedOrders = document.getElementById('completedOrders');
-
-const orderSound = document.getElementById('orderSound');
 
 const ordersRef = ref(db, 'orders');
 
@@ -366,19 +391,9 @@ const currentIds = ordersArray.map(order => order[0]);
 
 const newOrderArrived = currentIds.some(id => !previousIds.includes(id));
 
-if(newOrderArrived && soundEnabled){
+if(newOrderArrived){
 
-orderSound.currentTime = 0;
-
-orderSound.play().catch(err => console.log(err));
-
-setTimeout(()=>{
-
-orderSound.currentTime = 0;
-
-orderSound.play().catch(err => console.log(err));
-
-},3000);
+playAlarm();
 
 showPopup();
 
