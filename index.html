@@ -569,33 +569,6 @@ time: new Date().toLocaleString()
 
 };
 
-fetch("https://script.google.com/macros/s/AKfycbyUqWaDSRkPuevc8xhKJUSwijtr1oIVHhXYeO931l0IhW9KF45AKBuxMEV7xavzwqqv/exec", {
-
-method: "POST",
-
-body: JSON.stringify({
-
-token: tokenNumber,
-
-customer: customerName,
-
-phone: customerPhone,
-
-items: cart.map(item => `${item.name} x${item.quantity}`).join(", "),
-
-total: total,
-
-status: "Pending",
-
-time: new Date().toLocaleString()
-
-})
-
-});
-
-};
-
-};
 
 </script>
 <div id="customerModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:9999;">
