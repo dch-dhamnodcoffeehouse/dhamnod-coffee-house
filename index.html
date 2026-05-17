@@ -545,30 +545,37 @@ window.sendOrderToFirebase = async function(
   await push(ref(db,"orders"), orderData);
 
   // Save to Google Sheet
-  await fetch("https://script.google.com/macros/s/AKfycbyUqWaDSRkPuevc8xhKJUSwijtr1oIVHhXYeO931l0IhW9KF45AKBuxMEV7xavzwqqv/exec", {
+  try {
 
-    method: "POST",
+await fetch("https://script.google.com/macros/s/AKfycbyUqWaDSRkPuevc8xhKJUSwijtr1oIVHhXYeO931l0IhW9KF45AKBuxMEV7xavzwqqv/exec", {
 
-    body: JSON.stringify({
+method: "POST",
 
-      token: tokenNumber,
+body: JSON.stringify({
 
-      customer: customerName,
+token: tokenNumber,
 
-      phone: customerPhone,
+customer: customerName,
 
-      items: cart.map(item => `${item.name} x${item.quantity}`).join(", "),
+phone: customerPhone,
 
-      total: total,
+items: cart.map(item => `${item.name} x${item.quantity}`).join(", "),
 
-      status: "Pending",
+total: total,
 
-      time: new Date().toLocaleString()
+status: "Pending",
 
-    })
+time: new Date().toLocaleString()
 
-  });
+})
 
+});
+
+} catch(error) {
+
+console.log(error);
+
+}
 };
 
 </script>
