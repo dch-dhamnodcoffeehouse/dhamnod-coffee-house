@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DCH Analytics</title>
+
+<style>
+
+body{
+    margin:0;
+    padding:20px;
+    background:#111;
+    color:white;
+    font-family:Arial;
+}
+
+.title{
+    font-size:2rem;
+    font-weight:bold;
+    margin-bottom:25px;
+}
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:#1d1d1d;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+.card-title{
+    font-size:1rem;
+    color:#bbb;
+    margin-bottom:10px;
+}
+
+.card-value{
+    font-size:2rem;
+    font-weight:bold;
+}
+
+.green{
+    color:#2ecc71;
+}
+
+.orange{
+    color:#f39c12;
+}
+
+.blue{
+    color:#3498db;
+}
+
+.red{
+    color:#e74c3c;
+}
+
+.items-box{
+    margin-top:30px;
+    background:#1d1d1d;
+    padding:25px;
+    border-radius:18px;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #333;
+}
+
+@media(max-width:768px){
+
+body{
+    padding:14px;
+}
+
+.card-value{
+    font-size:1.6rem;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="title">
+📊 DCH Cafe Analytics
+</div>
+
+<div class="stats-grid">
+
+<div class="card">
+<div class="card-title">
+Total Revenue
+</div>
+<div class="card-value green" id="revenue">
+₹0
+</div>
+</div>
+
+<div class="card">
+<div class="card-title">
+Total Orders
+</div>
+<div class="card-value blue" id="orders">
+0
+</div>
+</div>
+
+<div class="card">
+<div class="card-title">
+Pending Orders
+</div>
+<div class="card-value orange" id="pending">
+0
+</div>
+</div>
+
+<div class="card">
+<div class="card-title">
+Completed Orders
+</div>
+<div class="card-value red" id="completed">
+0
+</div>
+</div>
+
+</div>
+
+<div class="items-box">
+
+<h2>
+🔥 Top Selling Items
+</h2>
+
+<div id="topItems">
+
+No data yet
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getDatabase,
+ref,
+onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
+
+authDomain: "dashboard-dch-a9904.firebaseapp.com",
+
+databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
+
+projectId: "dashboard-dch-a9904",
+
+storageBucket: "dashboard-dch-a9904.firebasestorage.app",
+
+messagingSenderId: "413889905968",
+
+appId: "1:413889905968:web:747b9a22aa95536f9074f5"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+const revenueEl = document.getElementById('revenue');
+
+const ordersEl = document.getElementById('orders');
+
+const pendingEl = document.getElementById('pending');
+
+const completedEl = document.getElementById('completed');
+
+const topItemsEl = document.getElementById('topItems');
+
+const ordersRef = ref(db, 'orders');
+
+onValue(ordersRef, (snapshot)=>{
+
+const data = snapshot.val();
+
+if(!data){
+
+return;
+
+}
+
+let revenue = 0;
+
+let totalOrders = 0;
+
+let pending = 0;
+
+let completed = 0;
+
+let itemStats = {};
+
+Object.values(data).forEach(order=>{
+
+totalOrders++;
+
+revenue += Number(order.total || 0);
+
+if(order.status === "Ready"){
+
+completed++;
+
+}else{
+
+pending++;
+
+}
+
+if(order.items){
+
+order.items.forEach(item=>{
+
+if(!itemStats[item.name]){
+
+itemStats[item.name] = 0;
+
+}
+
+itemStats[item.name] += item.quantity;
+
+});
+
+}
+
+});
+
+revenueEl.innerText = `₹${revenue}`;
+
+ordersEl.innerText = totalOrders;
+
+pendingEl.innerText = pending;
+
+completedEl.innerText = completed;
+
+const sortedItems = Object.entries(itemStats)
+.sort((a,b)=>b[1]-a[1]);
+
+topItemsEl.innerHTML = '';
+
+sortedItems.slice(0,10).forEach(item=>{
+
+topItemsEl.innerHTML += `
+
+<div class="item">
+
+<div>${item[0]}</div>
+
+<div>${item[1]} sold</div>
+
+</div>
+
+`;
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
