@@ -408,18 +408,74 @@
         updateCartCount(); renderCartItems();
     }
 
-    async function placeOrderWhatsApp() {
-        const whatsappNumber = "918982628715"; 
-        if (cart.length === 0) return;
-        let msg = "DCH Cafe Order:\n\n";
-        let total = 0;
-        cart.forEach((item, i) => { msg += `${i+1}. ${item.name} (x${item.quantity}) - ₹${item.price * item.quantity}\n`; total += item.price * item.quantity; });
-        msg += `\nTotal: ₹${total}`;
+    function placeOrderWhatsApp(){
 
- await sendOrderToFirebase(cart,total);
+if(cart.length === 0) return;
 
-window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
-    }
+document.getElementById("customerModal").style.display = "flex";
+
+}
+
+async function submitCustomerDetails(){
+
+const customerName = document.getElementById("customerName").value;
+
+const customerPhone = document.getElementById("customerPhone").value;
+
+if(!customerName || !customerPhone){
+
+alert("Please enter details");
+
+return;
+
+}
+
+const whatsappNumber = "918982628715";
+
+let msg = `DCH Cafe Order\n\n`;
+
+msg += `Customer: ${customerName}\n`;
+
+msg += `Phone: ${customerPhone}\n\n`;
+
+let total = 0;
+
+cart.forEach((item,i)=>{
+
+msg += `${i+1}. ${item.name} (x${item.quantity}) - ₹${item.price * item.quantity}\n`;
+
+total += item.price * item.quantity;
+
+});
+
+msg += `\nTotal: ₹${total}`;
+
+await sendOrderToFirebase(
+cart,
+total,
+customerName,
+customerPhone
+);
+
+window.open(
+`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`,
+'_blank'
+);
+
+cart = [];
+
+updateCartCount();
+
+closeModal();
+
+document.getElementById("customerModal").style.display = "none";
+
+showToast("Order Sent Successfully 🔥");
+
+}
+
+        
+
 
     function showToast(msg) { const t = document.getElementById('item-toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
     function openLocation() { window.open("https://www.google.com/maps/search/?api=1&query=Dhamnod+Coffee+House+Near+Bharat+Petrol+Pump+Maheshwar+Road+Dhamnod", '_blank'); }
@@ -458,7 +514,12 @@ const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
 
-window.sendOrderToFirebase = async function(cart,total){
+window.sendOrderToFirebase = async function(
+cart,
+total,
+customerName,
+customerPhone
+){
 
 const tokenNumber = Math.floor(1000 + Math.random() * 9000);
 
@@ -466,7 +527,9 @@ const orderData = {
 
 token: tokenNumber,
 
-customer: "Website Customer",
+customer: customerName,
+
+phone: customerPhone,
 
 items: cart,
 
@@ -478,13 +541,42 @@ time: new Date().toLocaleString()
 
 };
 
-console.log(orderData);
-
 await push(ref(db,"orders"),orderData);
 
-}; 
+};
 
 </script>
+<div id="customerModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:9999;">
+
+<div style="background:white;padding:25px;border-radius:18px;width:90%;max-width:400px;">
+
+<h2 style="text-align:center;color:#83977c;">
+Customer Details
+</h2>
+
+<input
+id="customerName"
+type="text"
+placeholder="Enter Your Name"
+style="width:100%;padding:14px;margin-bottom:15px;border-radius:10px;border:1px solid #ccc;"
+>
+
+<input
+id="customerPhone"
+type="tel"
+placeholder="Enter Mobile Number"
+style="width:100%;padding:14px;margin-bottom:15px;border-radius:10px;border:1px solid #ccc;"
+>
+
+<button
+onclick="submitCustomerDetails()"
+style="width:100%;padding:14px;background:#83977c;color:white;border:none;border-radius:10px;"
+>
+Continue Order
+</button>
+
+</div>
+</div>
 </body>
 </html>
 
