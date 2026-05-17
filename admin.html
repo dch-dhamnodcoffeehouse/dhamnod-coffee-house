@@ -1,184 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DCH Admin</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#83977c">
+<title>DCH Live Orders</title>
 
 <style>
+
 body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f5f5f5;
+    margin:0;
+    padding:20px;
+    background:#111;
+    color:white;
+    font-family:Arial;
 }
 
-.header{
-background:#83977c;
-color:white;
-padding:18px;
-font-size:24px;
-font-weight:bold;
-position:sticky;
-top:0;
-z-index:100;
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
-.stats{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-padding:15px;
+.title{
+    font-size:2rem;
+    font-weight:bold;
 }
 
-.stat-card{
-background:white;
-padding:18px;
-border-radius:14px;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
-text-align:center;
+.live{
+    background:#ff3b3b;
+    padding:8px 14px;
+    border-radius:999px;
+    font-weight:bold;
 }
 
-.stat-number{
-font-size:28px;
-font-weight:bold;
-color:#83977c;
+.sound-btn{
+    background:#2ecc71;
+    color:white;
+    border:none;
+    padding:10px 16px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.orders{
-padding:15px;
+.orders-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:20px;
 }
 
 .order-card{
-background:white;
-border-radius:16px;
-padding:18px;
-margin-bottom:15px;
-box-shadow:0 3px 12px rgba(0,0,0,0.1);
-animation:fadeIn .3s ease;
+    background:#1d1d1d;
+    border-radius:18px;
+    padding:20px;
+    border-left:6px solid orange;
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);
+    animation:fadeIn 0.3s ease;
 }
 
-@keyframes fadeIn{
-from{
-opacity:0;
-transform:translateY(10px);
+.order-number{
+    font-size:1.5rem;
+    font-weight:bold;
+    margin-bottom:10px;
+    color:#ffd166;
 }
 
-to{
-opacity:1;
-transform:translateY(0);
-}
+.customer{
+    color:#bbb;
+    margin-bottom:15px;
+    font-size:1rem;
+    line-height:1.7;
 }
 
-.token{
-font-size:32px;
-font-weight:bold;
-color:#83977c;
-margin-bottom:10px;
+.items{
+    margin-bottom:18px;
+    line-height:1.8;
+    color:#f2f2f2;
+}
+
+.total{
+    font-size:1.2rem;
+    font-weight:bold;
+    color:#8fff8f;
+    margin-bottom:18px;
 }
 
 .status{
-display:inline-block;
-padding:6px 12px;
-border-radius:20px;
-font-size:14px;
-font-weight:bold;
-margin-top:10px;
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:10px;
+    font-weight:bold;
+    background:orange;
+    color:black;
+    margin-bottom:15px;
 }
 
-.pending{
-background:#ffe0b2;
-color:#e65100;
+.empty{
+    text-align:center;
+    margin-top:80px;
+    color:#aaa;
+    font-size:1.5rem;
+}
+
+.popup{
+    display:none;
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:#2ecc71;
+    color:white;
+    padding:18px 22px;
+    border-radius:14px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    font-weight:bold;
+    z-index:9999;
+    opacity:0;
+    transform:translateY(-20px);
+    transition:0.3s;
+}
+
+.popup.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+.action-buttons{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.action-btn{
+    flex:1;
+    border:none;
+    padding:10px;
+    border-radius:10px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 .preparing{
-background:#bbdefb;
-color:#0d47a1;
+    background:#3498db;
 }
 
 .ready{
-background:#c8e6c9;
-color:#1b5e20;
+    background:#2ecc71;
 }
 
-.delivered{
-background:#e0e0e0;
-color:#424242;
+.complete{
+    background:#e74c3c;
 }
 
-.btns{
-margin-top:15px;
-display:flex;
-gap:10px;
-flex-wrap:wrap;
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
-button{
-border:none;
-padding:10px 14px;
-border-radius:8px;
-font-weight:bold;
-cursor:pointer;
+@media(max-width:768px){
+
+body{
+    padding:14px;
 }
 
-.prepare-btn{
-background:#2196f3;
-color:white;
+.title{
+    font-size:1.5rem;
 }
 
-.ready-btn{
-background:#4caf50;
-color:white;
+.order-card{
+    padding:16px;
 }
 
-.deliver-btn{
-background:#616161;
-color:white;
+.popup{
+    left:15px;
+    right:15px;
+    top:15px;
 }
 
-.print-btn{
-background:#ff9800;
-color:white;
 }
 
-#popup{
-position:fixed;
-top:20px;
-right:20px;
-background:#4caf50;
-color:white;
-padding:15px 20px;
-border-radius:10px;
-font-weight:bold;
-display:none;
-box-shadow:0 4px 15px rgba(0,0,0,0.2);
-z-index:9999;
-}
 </style>
+
 </head>
+
 <body>
 
-<div class="header">
-🍽️ DCH Admin Panel
+<div class="popup" id="popup">
+🔔 New Order Received
 </div>
 
-<div id="popup">🔔 New Order Received</div>
+<div class="topbar">
 
-<div class="stats">
-<div class="stat-card">
-<div>Orders</div>
-<div class="stat-number" id="totalOrders">0</div>
+<div class="title">
+☕ DCH Live Orders
 </div>
 
-<div class="stat-card">
-<div>Revenue</div>
-<div class="stat-number" id="totalRevenue">₹0</div>
-</div>
+<div style="display:flex; gap:10px; align-items:center;">
+
+<div class="live">
+🔴 LIVE
 </div>
 
-<div class="orders" id="ordersContainer"></div>
+<button class="sound-btn" onclick="enableSound()">
+🔔 Enable Sound
+</button>
+
+</div>
+
+</div>
+
+<div class="orders-grid">
+
+<div class="empty">
+Waiting for live orders...
+</div>
+
+</div>
+
+<audio id="orderSound">
+<source src="https://assets.mixkit.co/active_storage/sfx/2868/2868-preview.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+function enableSound(){
+
+const sound = document.getElementById('orderSound');
+
+sound.play();
+
+alert("Sound Enabled ✅");
+
+}
+
+function showPopup(){
+
+const popup = document.getElementById('popup');
+
+popup.style.display = 'block';
+
+popup.classList.add('show');
+
+setTimeout(()=>{
+
+popup.classList.remove('show');
+
+setTimeout(()=>{
+
+popup.style.display = 'none';
+
+},300);
+
+},4000);
+
+}
+
+</script>
 
 <script type="module">
 
@@ -188,119 +277,141 @@ import {
 getDatabase,
 ref,
 onValue,
+remove,
 update
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
+
 apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
+
 authDomain: "dashboard-dch-a9904.firebaseapp.com",
+
 databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
+
 projectId: "dashboard-dch-a9904",
+
 storageBucket: "dashboard-dch-a9904.firebasestorage.app",
+
 messagingSenderId: "413889905968",
+
 appId: "1:413889905968:web:747b9a22aa95536f9074f5"
+
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getDatabase(app);
 
-const ordersRef = ref(db,"orders");
+const ordersGrid = document.querySelector('.orders-grid');
 
-let oldCount = 0;
+const orderSound = document.getElementById('orderSound');
 
-onValue(ordersRef,(snapshot)=>{
+const ordersRef = ref(db, 'orders');
 
-const data = snapshot.val();
-const container = document.getElementById("ordersContainer");
-container.innerHTML = "";
+let previousCount = null;
 
-let totalOrders = 0;
-let totalRevenue = 0;
+window.completeOrder = async function(orderId){
 
-if(data){
+await remove(ref(db, `orders/${orderId}`));
 
-const entries = Object.entries(data).reverse();
-
-if(entries.length > oldCount){
-showPopup();
-playSound();
 }
 
-oldCount = entries.length;
+window.updateStatus = async function(orderId,status){
 
-document.getElementById("totalOrders").innerText = entries.length;
-
-entries.forEach(([id,order])=>{
-
-const card = document.createElement("div");
-card.className = "order-card";
-
-let itemsHtml = "";
-
-order.items.forEach(item=>{
-itemsHtml += `<div>${item.name} x${item.quantity}</div>`;
+await update(ref(db, `orders/${orderId}`),{
+status:status
 });
 
-let statusClass = "pending";
+}
 
-if(order.status === "Preparing") statusClass = "preparing";
-if(order.status === "Ready") statusClass = "ready";
-if(order.status === "Delivered") statusClass = "delivered";
+onValue(ordersRef, (snapshot) => {
 
-card.innerHTML = `
-<div class="token">#${order.token}</div>
-<div><b>Customer:</b> ${order.customer}</div>
-<div style="margin-top:10px;">
-${itemsHtml}
-</div>
-<div style="margin-top:10px;"><b>Total:</b> ₹${order.total}</div>
-<div class="status ${statusClass}">${order.status}</div>
-<div style="margin-top:10px;font-size:13px;color:gray;">${order.time}</div>
+ordersGrid.innerHTML = '';
 
-<div class="btns">
-<button class="prepare-btn" onclick="updateStatus('${id}','Preparing')">Preparing</button>
-<button class="ready-btn" onclick="updateStatus('${id}','Ready')">Ready</button>
-<button class="deliver-btn" onclick="updateStatus('${id}','Delivered')">Delivered</button>
-<button class="print-btn" onclick="window.print()">Print</button>
+const data = snapshot.val();
+
+if(!data){
+
+ordersGrid.innerHTML = `
+<div class="empty">
+No live orders yet...
 </div>
 `;
 
-container.appendChild(card);
+return;
 
-totalOrders++;
-totalRevenue += Number(order.total);
+}
+
+const ordersArray = Object.entries(data).reverse();
+
+if(previousCount !== null && ordersArray.length > previousCount){
+
+orderSound.play();
+
+showPopup();
+
+}
+
+previousCount = ordersArray.length;
+
+ordersArray.forEach(([id, order]) => {
+
+const card = document.createElement('div');
+
+card.className = 'order-card';
+
+card.innerHTML = `
+
+<div class="order-number">
+#${order.token || id.slice(-4)}
+</div>
+
+<div class="customer">
+👤 ${order.customer}<br>
+📞 ${order.phone || "No Number"}
+</div>
+
+<div class="items">
+${order.items.map(item =>
+`• ${item.name} x${item.quantity}`
+).join('<br>')}
+</div>
+
+<div class="total">
+₹${order.total}
+</div>
+
+<div class="status">
+${order.status || "Pending"}
+</div>
+
+<div class="action-buttons">
+
+<button class="action-btn preparing"
+onclick="updateStatus('${id}','Preparing')">
+Preparing
+</button>
+
+<button class="action-btn ready"
+onclick="updateStatus('${id}','Ready')">
+Ready
+</button>
+
+<button class="action-btn complete"
+onclick="completeOrder('${id}')">
+Complete
+</button>
+
+</div>
+
+`;
+
+ordersGrid.appendChild(card);
 
 });
-}
-
-
-document.getElementById("totalRevenue").innerText = `₹${totalRevenue}`;
 
 });
-
-window.updateStatus = function(id,status){
-update(ref(db,'orders/'+id),{
-status:status
-});
-}
-
-function showPopup(){
-const popup = document.getElementById("popup");
-popup.style.display = "block";
-
-setTimeout(()=>{
-popup.style.display = "none";
-},4000);
-}
-
-function playSound(){
-const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-audio.play();
-}
-
-if('serviceWorker' in navigator){
-navigator.serviceWorker.register('service-worker.js');
-}
 
 </script>
 
