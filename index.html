@@ -450,23 +450,14 @@ total += item.price * item.quantity;
 msg += `\nTotal: ₹${total}`;
 
 
-// SAFE FIREBASE
-try {
-
 if(window.sendOrderToFirebase){
 
-await window.sendOrderToFirebase(
+window.sendOrderToFirebase(
 cart,
 total,
 customerName,
 customerPhone
-);
-
-}
-
-} catch(error){
-
-console.log(error);
+).catch(err => console.log(err));
 
 }
 
