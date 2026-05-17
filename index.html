@@ -430,10 +430,13 @@ if(!customerName || !customerPhone){
 
 alert("Please enter details");
 
+btn.disabled = false;
+
+btn.innerText = "Continue Order";
+
 return;
 
 }
-
 const whatsappNumber = "918982628715";
 
 let msg = `DCH Cafe Order\n\n`;
@@ -482,6 +485,10 @@ closeModal();
 document.getElementById("customerModal").style.display = "none";
 
 showToast("Order Sent Successfully 🔥");
+
+btn.disabled = false;
+
+btn.innerText = "Continue Order";
 
 }
         
