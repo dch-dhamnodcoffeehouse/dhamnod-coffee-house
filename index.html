@@ -450,12 +450,16 @@ total += item.price * item.quantity;
 
 msg += `\nTotal: ₹${total}`;
 
-await sendOrderToFirebase(
+if(window.sendOrderToFirebase){
+
+await window.sendOrderToFirebase(
 cart,
 total,
 customerName,
 customerPhone
 );
+
+}
 
 window.open(
 `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`,
