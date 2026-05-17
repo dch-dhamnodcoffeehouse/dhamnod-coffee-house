@@ -33,6 +33,7 @@ body{
     background:#1d1d1d;
     padding:25px;
     border-radius:18px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
 }
 
 .card-title{
@@ -46,10 +47,21 @@ body{
     font-weight:bold;
 }
 
-.green{ color:#2ecc71; }
-.orange{ color:#f39c12; }
-.blue{ color:#3498db; }
-.red{ color:#e74c3c; }
+.green{
+    color:#2ecc71;
+}
+
+.orange{
+    color:#f39c12;
+}
+
+.blue{
+    color:#3498db;
+}
+
+.red{
+    color:#e74c3c;
+}
 
 .items-box{
     margin-top:30px;
@@ -65,6 +77,65 @@ body{
     border-bottom:1px solid #333;
 }
 
+.section{
+    margin-top:35px;
+}
+
+.order-box{
+    background:#1d1d1d;
+    padding:18px;
+    border-radius:16px;
+    margin-bottom:15px;
+}
+
+.order-head{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
+.order-status{
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:0.9rem;
+}
+
+.pending{
+    background:orange;
+    color:black;
+}
+
+.preparing{
+    background:#3498db;
+}
+
+.ready{
+    background:#2ecc71;
+}
+
+.completed{
+    background:#777;
+}
+
+.order-items{
+    color:#ccc;
+    margin-top:10px;
+    line-height:1.8;
+}
+
+@media(max-width:768px){
+
+body{
+    padding:14px;
+}
+
+.card-value{
+    font-size:1.6rem;
+}
+
+}
+
 </style>
 
 </head>
@@ -78,23 +149,39 @@ body{
 <div class="stats-grid">
 
 <div class="card">
-<div class="card-title">Total Revenue</div>
-<div class="card-value green" id="revenue">₹0</div>
+<div class="card-title">
+Total Revenue
+</div>
+<div class="card-value green" id="revenue">
+₹0
+</div>
 </div>
 
 <div class="card">
-<div class="card-title">Total Orders</div>
-<div class="card-value blue" id="orders">0</div>
+<div class="card-title">
+Total Orders
+</div>
+<div class="card-value blue" id="orders">
+0
+</div>
 </div>
 
 <div class="card">
-<div class="card-title">Active Orders</div>
-<div class="card-value orange" id="pending">0</div>
+<div class="card-title">
+Active Orders
+</div>
+<div class="card-value orange" id="pending">
+0
+</div>
 </div>
 
 <div class="card">
-<div class="card-title">Completed Orders</div>
-<div class="card-value red" id="completed">0</div>
+<div class="card-title">
+Completed Orders
+</div>
+<div class="card-value red" id="completed">
+0
+</div>
 </div>
 
 </div>
@@ -106,7 +193,23 @@ body{
 </h2>
 
 <div id="topItems">
+
 No data yet
+
+</div>
+
+</div>
+
+<div class="section">
+
+<h2>
+🧾 Recent Orders
+</h2>
+
+<div id="recentOrders">
+
+No recent orders
+
 </div>
 
 </div>
@@ -123,13 +226,19 @@ onValue
 
 const firebaseConfig = {
 
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_AUTH_DOMAIN",
-databaseURL: "YOUR_DATABASE_URL",
-projectId: "YOUR_PROJECT_ID",
-storageBucket: "YOUR_STORAGE_BUCKET",
-messagingSenderId: "YOUR_SENDER_ID",
-appId: "YOUR_APP_ID"
+apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
+
+authDomain: "dashboard-dch-a9904.firebaseapp.com",
+
+databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
+
+projectId: "dashboard-dch-a9904",
+
+storageBucket: "dashboard-dch-a9904.firebasestorage.app",
+
+messagingSenderId: "413889905968",
+
+appId: "1:413889905968:web:747b9a22aa95536f9074f5"
 
 };
 
@@ -138,10 +247,16 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const revenueEl = document.getElementById('revenue');
+
 const ordersEl = document.getElementById('orders');
+
 const pendingEl = document.getElementById('pending');
+
 const completedEl = document.getElementById('completed');
+
 const topItemsEl = document.getElementById('topItems');
+
+const recentOrdersEl = document.getElementById('recentOrders');
 
 const ordersRef = ref(db, 'orders');
 
@@ -150,26 +265,39 @@ onValue(ordersRef, (snapshot)=>{
 const data = snapshot.val();
 
 if(!data){
+
+recentOrdersEl.innerHTML = "No orders found";
+
 return;
+
 }
 
 let revenue = 0;
+
 let totalOrders = 0;
+
 let activeOrders = 0;
+
 let completedOrders = 0;
 
 let itemStats = {};
 
-Object.values(data).forEach(order=>{
+const ordersArray = Object.entries(data).reverse();
+
+ordersArray.forEach(([id,order])=>{
 
 totalOrders++;
 
 revenue += Number(order.total || 0);
 
 if(order.status === "Completed"){
+
 completedOrders++;
+
 }else{
+
 activeOrders++;
+
 }
 
 if(order.items){
@@ -177,7 +305,9 @@ if(order.items){
 order.items.forEach(item=>{
 
 if(!itemStats[item.name]){
+
 itemStats[item.name] = 0;
+
 }
 
 itemStats[item.name] += item.quantity;
@@ -189,8 +319,11 @@ itemStats[item.name] += item.quantity;
 });
 
 revenueEl.innerText = `₹${revenue}`;
+
 ordersEl.innerText = totalOrders;
+
 pendingEl.innerText = activeOrders;
+
 completedEl.innerText = completedOrders;
 
 const sortedItems = Object.entries(itemStats)
@@ -214,7 +347,73 @@ topItemsEl.innerHTML += `
 
 });
 
+recentOrdersEl.innerHTML = '';
+
+ordersArray.slice(0,10).forEach(([id,order])=>{
+
+let statusClass = "pending";
+
+if(order.status === "Preparing"){
+statusClass = "preparing";
+}
+
+if(order.status === "Ready"){
+statusClass = "ready";
+}
+
+if(order.status === "Completed"){
+statusClass = "completed";
+}
+
+recentOrdersEl.innerHTML += `
+
+<div class="order-box">
+
+<div class="order-head">
+
+<div>
+#${order.token || id.slice(-4)}
+</div>
+
+<div class="order-status ${statusClass}">
+${order.status || "Pending"}
+</div>
+
+</div>
+
+<div>
+👤 ${order.customer}
+</div>
+
+<div>
+📞 ${order.phone || "No Number"}
+</div>
+
+<div>
+🕒 ${order.time || "No Time"}
+</div>
+
+<div class="order-items">
+
+${order.items.map(item =>
+`• ${item.name} x${item.quantity}`
+).join('<br>')}
+
+</div>
+
+<div style="margin-top:12px;font-weight:bold;color:#2ecc71;">
+
+₹${order.total}
+
+</div>
+
+</div>
+
+`;
+
 });
+
+}); 
 
 </script>
 
