@@ -231,8 +231,8 @@ Waiting for live orders...
 
 <div class="orders-grid" id="completedOrders"></div>
 
-<audio id="orderSound">
-<source src="https://assets.mixkit.co/active_storage/sfx/2867/2867-preview.mp3" type="audio/mpeg">
+<audio id="orderSound" preload="auto">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=warning-alarm-buzzer-99193.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -370,15 +370,15 @@ if(newOrderArrived && soundEnabled){
 
 orderSound.currentTime = 0;
 
-orderSound.play();
+orderSound.play().catch(err => console.log(err));
 
 setTimeout(()=>{
 
 orderSound.currentTime = 0;
 
-orderSound.play();
+orderSound.play().catch(err => console.log(err));
 
-},2500);
+},3000);
 
 showPopup();
 
