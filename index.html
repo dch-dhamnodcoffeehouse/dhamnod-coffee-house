@@ -561,6 +561,12 @@ await fetch("https://script.google.com/macros/s/AKfycbyUqWaDSRkPuevc8xhKJUSwijtr
 
 method: "POST",
 
+mode: "no-cors",
+
+headers: {
+"Content-Type": "application/json"
+},
+
 body: JSON.stringify({
 
 token: tokenNumber,
