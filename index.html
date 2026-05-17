@@ -487,26 +487,26 @@ showToast("Order Sent Successfully 🔥");
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-getDatabase,
-ref,
-push
+  getDatabase,
+  ref,
+  push
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
+  apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
 
-authDomain: "dashboard-dch-a9904.firebaseapp.com",
+  authDomain: "dashboard-dch-a9904.firebaseapp.com",
 
-databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
+  databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
 
-projectId: "dashboard-dch-a9904",
+  projectId: "dashboard-dch-a9904",
 
-storageBucket: "dashboard-dch-a9904.firebasestorage.app",
+  storageBucket: "dashboard-dch-a9904.firebasestorage.app",
 
-messagingSenderId: "413889905968",
+  messagingSenderId: "413889905968",
 
-appId: "1:413889905968:web:747b9a22aa95536f9074f5"
+  appId: "1:413889905968:web:747b9a22aa95536f9074f5"
 
 };
 
@@ -515,60 +515,61 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 window.sendOrderToFirebase = async function(
-cart,
-total,
-customerName,
-customerPhone
+  cart,
+  total,
+  customerName,
+  customerPhone
 ){
 
-const tokenNumber = Math.floor(1000 + Math.random() * 9000);
+  const tokenNumber = Math.floor(1000 + Math.random() * 9000);
 
-const orderData = {
+  const orderData = {
 
-token: tokenNumber,
+    token: tokenNumber,
 
-customer: customerName,
+    customer: customerName,
 
-phone: customerPhone,
+    phone: customerPhone,
 
-items: cart,
+    items: cart,
 
-total: total,
+    total: total,
 
-status: "Pending",
+    status: "Pending",
 
-time: new Date().toLocaleString()
+    time: new Date().toLocaleString()
+
+  };
+
+  // Save to Firebase
+  await push(ref(db,"orders"), orderData);
+
+  // Save to Google Sheet
+  await fetch("https://script.google.com/macros/s/AKfycbyUqWaDSRkPuevc8xhKJUSwijtr1oIVHhXYeO931l0IhW9KF45AKBuxMEV7xavzwqqv/exec", {
+
+    method: "POST",
+
+    body: JSON.stringify({
+
+      token: tokenNumber,
+
+      customer: customerName,
+
+      phone: customerPhone,
+
+      items: cart.map(item => `${item.name} x${item.quantity}`).join(", "),
+
+      total: total,
+
+      status: "Pending",
+
+      time: new Date().toLocaleString()
+
+    })
+
+  });
 
 };
-
-await push(ref(db,"orders"),orderData);
-
-fetch("https://script.google.com/macros/s/AKfycbyUqWaDSRkPuevc8xhKJUSwijtr1oIVHhXYeO931l0IhW9KF45AKBuxMEV7xavzwqqv/exec", {
-
-method: "POST",
-
-body: JSON.stringify({
-
-token: tokenNumber,
-
-customer: customerName,
-
-phone: customerPhone,
-
-items: cart.map(item => `${item.name} x${item.quantity}`).join(", "),
-
-total: total,
-
-status: "Pending",
-
-time: new Date().toLocaleString()
-
-})
-
-});
-
-};
-
 
 </script>
 <div id="customerModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:none;justify-content:center;align-items:center;z-index:9999;">
