@@ -524,6 +524,7 @@ ${order.items.map(item =>
 }); 
 
 </script>
+
 <script>
 
 const ADMIN_USERNAME = "dchdhamnod";
@@ -541,7 +542,7 @@ user === ADMIN_USERNAME &&
 pass === ADMIN_PASSWORD
 ){
 
-localStorage.setItem("dchAdminLoggedIn","true");
+localStorage.setItem("dchAnalyticsLoggedIn","true");
 
 document.getElementById("loginScreen").style.display = "none";
 
@@ -555,7 +556,7 @@ document.getElementById("loginError").style.display = "block";
 
 window.onload = function(){
 
-const loggedIn = localStorage.getItem("dchAdminLoggedIn");
+const loggedIn = localStorage.getItem("dchAnalyticsLoggedIn");
 
 if(loggedIn === "true"){
 
@@ -567,12 +568,13 @@ document.getElementById("loginScreen").style.display = "none";
 
 function logoutAdmin(){
 
-localStorage.removeItem("dchAdminLoggedIn");
+localStorage.removeItem("dchAnalyticsLoggedIn");
 
 location.reload();
 
 }
 
 </script>
+
 </body>
 </html>
