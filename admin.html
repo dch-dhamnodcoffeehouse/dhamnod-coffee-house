@@ -7,6 +7,9 @@
 
 <title>DCH Live Orders</title>
 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#83977c">
+
 <style>
 
 body{
@@ -701,5 +704,24 @@ location.reload();
 }
 
 </script>
+
+<script>
+
+if ('serviceWorker' in navigator) {
+
+navigator.serviceWorker.register('/service-worker.js')
+
+.then(() => {
+
+console.log("Service Worker Registered");
+
+});
+
+}
+
+Notification.requestPermission();
+
+</script>
+
 </body>
 </html>
