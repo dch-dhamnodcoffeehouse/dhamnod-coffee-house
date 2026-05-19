@@ -7,8 +7,12 @@
 
 <title>DCH Live Orders</title>
 
-<link rel="manifest" href="manifest.json">
+
+<link rel="manifest" href="/manifest.json">
+
 <meta name="theme-color" content="#83977c">
+
+<link rel="apple-touch-icon" href="/icon-192.png">
 
 <style>
 
@@ -706,21 +710,21 @@ location.reload();
 </script>
 
 <script>
-
 if ('serviceWorker' in navigator) {
 
-navigator.serviceWorker.register('./service-worker.js')
+window.addEventListener('load', () => {
 
-.then(() => {
-
-console.log("Service Worker Registered");
+navigator.serviceWorker.register('/service-worker.js')
+.then((reg) => {
+console.log('SW registered', reg);
+})
+.catch((err) => {
+console.log('SW failed', err);
+});
 
 });
 
 }
-
-Notification.requestPermission();
-
 </script>
 
 </body>
