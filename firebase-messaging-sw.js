@@ -4,7 +4,6 @@ importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-com
 firebase.initializeApp({
   apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
   authDomain: "dashboard-dch-a9904.firebaseapp.com",
-  databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
   projectId: "dashboard-dch-a9904",
   storageBucket: "dashboard-dch-a9904.firebasestorage.app",
   messagingSenderId: "413889905968",
@@ -19,7 +18,7 @@ messaging.onBackgroundMessage(function(payload) {
     payload.notification.title,
     {
       body: payload.notification.body,
-      icon: 'https://cdn-icons-png.flaticon.com/512/1046/1046784.png'
+      icon: "/icon-192.png"
     }
   );
 
