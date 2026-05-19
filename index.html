@@ -20,7 +20,7 @@
 
         * { box-sizing:border-box; }
 
-        body{ margin:0; padding:0; background-color:var(--color-cream); color:var(--color-espresso); font-family:var(--font-body); }
+        body{ margin:0; padding:0; background:#0d0d0d; color:var(--color-espresso); font-family:var(--font-body); }
 
         /* LOGO */
         .cafe-title { font-family:var(--font-title); font-size:1.6rem; font-weight:700; margin:0; flex-shrink:0; text-indent: -9999px; white-space: nowrap; overflow: hidden; width: 120px; height: 40px; background-size: contain; background-repeat: no-repeat; background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAEAAgIDASIAAhEBAQEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAQIAAwQFBgf/xAA5EAACAgEDAwIEBAUEAQMFAAABAgADESEEBRIxQRMiUWEycYGRBhQjQqHRFLHB4fDxByMzUpL/xAAbAQACAwEBAQAAAAAAAAAAAAAAAQIDBAUGB//EADcRAAEDAgQDBgQEBQQCAgMAAAABAhEAAwQFEiExQQYhUWFxEyKBkaHBsdHwMjNCQuEV8RUzYnL/2gAARCAEAAgIDASIAAhEBAxEB/8AxtE+K8o3GvXzM8x7J/aYJpGjHpnxXm442G43n+c1zM8x7I+1H2u2I3G40D5jXW5Uu3p0RzCj+iS8x45jXgM3Yt47o2+03F8b7/AGm17kG+G79T4x5g/wAJ/wB7j/d+f/9Z'); }
@@ -39,9 +39,24 @@
         .toast.show { opacity: 1; }
 
         /* PAGE LAYOUT */
-        .page{ min-height:100vh; padding-top:80px; }
+        .page{
+    min-height:100vh;
+    padding-top:0;
+}
         .page[style*="display: block"] { animation: fadeIn 0.4s ease-out; }
-        .header{ position:fixed; top:0; left:0; width:100%; background-color:var(--color-cream); padding:12px 22px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 4px rgba(56,43,34,0.1); z-index:1000; white-space:nowrap; }
+        .header{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+background:#000;
+padding:16px 20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:99999;
+border-bottom:1px solid rgba(255,255,255,0.08);
+}
         .nav-actions{ display: flex; gap: 10px; align-items: center; }
 
         /* BUTTONS */
@@ -73,7 +88,14 @@
         /* CONTENT GENERAL */
         .content-area{ max-width:1200px; margin:0 auto; padding:20px; }
         .section-title{ font-family:var(--font-title); font-size:2rem; text-align:center; margin-top:40px; margin-bottom:16px; color:var(--color-dark-sage); }
-        .cafe-brief{ text-align:center; font-size:1.05rem; line-height:1.6; max-width:680px; margin:0 auto 30px; }
+        .cafe-brief{
+    text-align:center;
+    font-size:1.05rem;
+    line-height:1.6;
+    max-width:680px;
+    margin:0 auto 30px;
+    color:#ddd;
+}
         
         /* GALLERY STYLES */
         .gallery-wrapper { margin-top: 40px; margin-bottom: 30px; display: none; } /* Hidden by default */
@@ -109,24 +131,528 @@
 
         /* CATEGORY GRID */
         .category-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-top:28px; }
-        .category-button{ background:white; border:1px solid var(--color-sage); color:var(--color-espresso); padding:14px 10px; height:100px; border-radius:12px; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer; transition:all .18s; box-shadow:0 2px 5px rgba(0,0,0,0.04); }
+       .category-button{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.08);
+    color:white;
+    padding:14px 10px;
+    height:100px;
+    border-radius:18px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    transition:0.3s;
+    backdrop-filter:blur(10px);
+}
+
+.category-button:hover{
+    background:#ffb400;
+    color:black;
+    transform:translateY(-5px);
+}
+
+.category-button.active-category{
+    background:#ffb400;
+    color:black;
+}
         .category-button:hover{ background:var(--color-sage); color:white; transform:scale(1.05); }
         .category-button.active-category { background: var(--color-dark-sage); color: white; border-color: var(--color-espresso); }
 
         /* MENU ITEMS */
         .menu-item-list{ margin-top:24px; border-top:1px solid #e5e0d4; padding-top:18px; display:block; scroll-margin-top: 80px; }
         .menu-item-list.hidden{ display:none; }
-        .menu-item-card { opacity: 0; display:flex; justify-content:space-between; align-items:center; padding:12px 16px; margin-bottom:12px; background:white; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.05); }
-        .menu-item-list-title{ font-family:var(--font-title); font-size:1.6rem; text-align:center; color:var(--color-espresso); margin-bottom:18px; }
+        .menu-item-card{
+    opacity:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px;
+    margin-bottom:18px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:18px;
+    backdrop-filter:blur(12px);
+}
+        .menu-item-list-title{
+    font-size:2.4rem;
+    text-align:center;
+    color:#ffb400;
+    margin-bottom:28px;
+    font-weight:900;
+    letter-spacing:3px;
+    text-shadow:0 0 18px rgba(255,180,0,0.35);
+}
         .item-details{ flex-grow:1; max-width:60%; }
-        .item-name{ font-family:var(--font-title); font-size:1.05rem; font-weight:700; color:var(--color-espresso); }
+        .item-name{
+    font-size:1.1rem;
+    font-weight:700;
+    color:white;
+}
         .item-price{ font-size:1.05rem; font-weight:800; color:var(--color-dark-sage); margin-left:14px; }
-        .item-desc { font-size: 0.85rem; color: var(--color-sage); margin-top: 2px; font-weight: 500; }
-        .add-to-order-button{ background:var(--color-sage); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:700; margin-left:10px; }
-        
+        .item-desc{
+    font-size:0.9rem;
+    color:#bbb;
+    margin-top:4px;
+}
+        .add-to-order-button{
+    background:#ffb400;
+    color:black;
+    border:none;
+    padding:10px 16px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:800;
+}
+    .header{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+background:rgba(0,0,0,0.85);
+backdrop-filter:blur(10px);
+padding:14px 18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+z-index:99999;
+}
+
+.mobile-header-left{
+display:flex;
+flex-direction:column;
+}
+
+.logo-text{
+font-size:2rem;
+font-weight:900;
+color:#ffb400;
+margin:0;
+line-height:1;
+}
+
+.logo-sub{
+font-size:0.85rem;
+color:white;
+font-weight:600;
+}
+
+.mobile-header-right{
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.location-btn{
+background:white;
+color:black;
+border:none;
+padding:10px 16px;
+border-radius:12px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.menu-btn-top{
+background:#a6b49e;
+color:white;
+border:none;
+padding:10px 16px;
+border-radius:12px;
+font-weight:bold;
+cursor:pointer;
+}
+
+    
+  
         /* LOADING STATE */
         #loading-message { text-align:center; padding: 40px; font-size: 1.2rem; color: var(--color-sage); }
-    </style>
+  html{
+scroll-behavior:smooth;
+}
+   /* GAMING HERO */
+
+.gaming-hero{
+    position:relative;
+    min-height:100vh;
+    background:url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    overflow:hidden;
+    padding:120px 20px 60px;
+}
+
+.hero-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.75);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+    padding:20px;
+    max-width:900px;
+}
+
+.live-box{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    border:1px solid #ffb400;
+    padding:12px 22px;
+    border-radius:50px;
+    color:white;
+    font-weight:700;
+    margin-bottom:30px;
+}
+
+.live-dot{
+    width:14px;
+    height:14px;
+    background:red;
+    border-radius:50%;
+}
+
+.gaming-hero h1{
+    font-size:100px;
+    color:#ffb400;
+    margin:0;
+    font-weight:900;
+}
+
+.gaming-hero h2{
+    font-size:65px;
+    color:white;
+    margin-top:10px;
+}
+
+.tag-line{
+    color:#2fff66;
+    font-size:32px;
+    letter-spacing:5px;
+    font-weight:800;
+    margin-top:20px;
+}
+
+.gaming-hero p{
+    color:#ddd;
+    font-size:28px;
+    margin-top:30px;
+    line-height:1.5;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:40px;
+}
+
+.order-btn{
+    background:#ffb400;
+    color:black;
+    border:none;
+    padding:20px 35px;
+    border-radius:20px;
+    font-size:24px;
+    font-weight:800;
+}
+
+.game-btn{
+    background:transparent;
+    border:2px solid white;
+    color:white;
+    padding:20px 35px;
+    border-radius:20px;
+    font-size:24px;
+    font-weight:800;
+}
+
+/* STATS */
+
+.stats-container{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    padding:40px 20px;
+    margin-top:-80px;
+    position:relative;
+    z-index:5;
+}
+
+.stat-box{
+    background:rgba(20,20,20,0.9);
+    border-radius:25px;
+    padding:35px 20px;
+    text-align:center;
+    color:white;
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+.stat-box .icon{
+    font-size:40px;
+    margin-bottom:15px;
+}
+
+.stat-box h3{
+    color:#ffb400;
+    font-size:40px;
+    margin:10px 0;
+}
+
+.stat-box span{
+    color:#ddd;
+    font-size:18px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .gaming-hero h1{
+        font-size:70px;
+    }
+
+    .gaming-hero h2{
+        font-size:40px;
+    }
+
+    .tag-line{
+        font-size:20px;
+    }
+
+    .gaming-hero p{
+        font-size:18px;
+    }
+
+    .stats-container{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+} 
+  @media(max-width:768px){
+
+    .stats-container{
+        grid-template-columns:1fr 1fr;
+        margin-top:20px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .order-btn,
+    .game-btn{
+        width:100%;
+        max-width:320px;
+    }
+
+    .gaming-hero h1{
+        font-size:70px;
+    }
+
+    .gaming-hero h2{
+        font-size:38px;
+    }
+
+    .gaming-hero p{
+        font-size:18px;
+    }
+.order-btn,
+.game-btn{
+    font-size:20px;
+    padding:18px 24px;
+}
+}
+  .app-hero{
+min-height:100vh;
+background:
+linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.75)),
+url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1920&auto=format&fit=crop');
+background-size:cover;
+background-position:center;
+padding:20px;
+color:white;
+}
+
+.top-nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.brand-title{
+font-size:3rem;
+font-weight:900;
+color:#ffb400;
+line-height:1;
+}
+
+.brand-sub{
+font-size:1rem;
+font-weight:600;
+}
+
+.top-menu-btn{
+background:none;
+border:none;
+color:white;
+font-size:2rem;
+}
+
+.menu-tabs{
+display:flex;
+justify-content:space-around;
+margin-top:30px;
+padding-bottom:10px;
+border-bottom:1px solid rgba(255,255,255,0.1);
+overflow:auto;
+}
+
+.menu-tabs a{
+color:white;
+text-decoration:none;
+font-weight:700;
+padding-bottom:10px;
+white-space:nowrap;
+}
+
+.active-tab{
+color:#ffb400 !important;
+border-bottom:3px solid #ffb400;
+}
+
+.hero-center{
+text-align:center;
+padding-top:70px;
+}
+
+.live-pill{
+display:inline-block;
+padding:10px 18px;
+border:1px solid #ffb400;
+border-radius:999px;
+margin-bottom:30px;
+font-weight:700;
+}
+
+.hero-center h1{
+font-size:5rem;
+margin:0;
+color:#ffb400;
+}
+
+.hero-center h2{
+font-size:3rem;
+margin:10px 0;
+}
+
+.hero-line{
+color:#2fff66;
+font-size:1.5rem;
+letter-spacing:5px;
+font-weight:800;
+margin-top:20px;
+}
+
+.hero-center p{
+max-width:650px;
+margin:30px auto;
+font-size:1.2rem;
+line-height:1.7;
+color:#ddd;
+}
+
+.hero-btns{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.yellow-btn{
+background:#ffb400;
+color:black;
+border:none;
+padding:18px 34px;
+border-radius:18px;
+font-size:1.1rem;
+font-weight:800;
+}
+
+.border-btn{
+background:transparent;
+border:2px solid white;
+color:white;
+padding:18px 34px;
+border-radius:18px;
+font-size:1.1rem;
+font-weight:800;
+}
+
+.stats-strip{
+margin-top:50px;
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(12px);
+border-radius:24px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+padding:25px;
+gap:20px;
+}
+
+.mini-stat{
+text-align:center;
+}
+
+.mini-stat h3{
+margin:0;
+font-size:2rem;
+color:#ffb400;
+}
+
+.mini-stat span{
+color:#ddd;
+}
+
+@media(max-width:768px){
+
+.hero-center h1{
+font-size:4rem;
+}
+
+.hero-center h2{
+font-size:2.4rem;
+}
+
+.stats-strip{
+grid-template-columns:1fr 1fr;
+}
+
+.hero-btns{
+flex-direction:column;
+align-items:center;
+}
+
+.yellow-btn,
+.border-btn{
+width:100%;
+max-width:320px;
+}
+
+}
+  .menu-content{
+    padding-top:120px !important;
+}
+  </style>
 </head>
 <body>
 
@@ -135,41 +661,222 @@
 </div>
 
 <div id="home-page" class="page" style="display: block;">
-  <header class="header">
-    <h1 class="cafe-title">DCH Cafe</h1>
-    <div class="nav-actions">
-        <button class="nav-button secondary" onclick="openLocation()" title="Location">
-             <svg class="maps-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#EA4335" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle fill="#9e2a22" cx="12" cy="9" r="2.5"/></svg>
-            Location
-        </button>
-        <button class="nav-button" onclick="showMenu()">View Menu</button>
-    </div>
-  </header>
+  
 
-  <main class="content-area home-content">
-    <h2 class="section-title">Welcome to Our Family Table</h2>
-    <p class="cafe-brief">Nestled in the heart of the community, DCH Cafe serves freshly brewed coffee, homemade treats, and wholesome food.</p>
-    
-    <div style="text-align: center; margin-bottom: 25px; padding: 10px; background-color: #f0ebe0; border-radius: 8px;">
-        <h3 style="font-size: 1.2rem; margin: 0 0 5px; color: var(--color-dark-sage);">Hours of Operation</h3>
-        <p style="margin: 0;">Monday - Saturday: 9:00 AM - 9:00 PM</p>
-        <p style="margin: 0;">Sunday: 10:00 AM - 7:00 PM</p>
-    </div>
+  <section class="app-hero">
 
-    <div id="home-gallery-section" class="gallery-wrapper">
-        <h3 class="gallery-title">Moments @ DCH</h3>
-        <div id="gallery-scroller" class="gallery-container">
-            </div>
-    </div>
-    
-    <div style="background-color: var(--color-sage); padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 10px; margin-top: 20px;">
-        <h3 style="color: white; font-family: var(--font-title); font-size: 1.8rem; margin-bottom: 5px;">🌟 Today's Special 🌟</h3>
-        <h4 style="color: white; font-family: var(--font-title); font-size: 2.5rem; margin-top: 5px;">The Grill Paneer Special!</h4>
-        <button class="nav-button" style="background-color: var(--color-espresso); margin-top: 15px;" onclick="showMenu()">Order Now</button>
-    </div>
-  </main>
+<div class="top-nav">
+
+<div class="brand">
+<div class="brand-title">DCH</div>
+<div class="brand-sub">Cafe & Game Zone</div>
 </div>
 
+<button class="top-menu-btn">
+☰
+</button>
+
+</div>
+
+<div class="menu-tabs">
+<a class="active-tab">Home</a>
+<a onclick="showMenu()">Menu</a>
+<a onclick="showGameZone()">Game Zone</a>
+<a href="#gallery">Gallery</a>
+<a href="#contact">Contact</a>
+</div>
+
+<div class="hero-center">
+
+<div class="live-pill">
+🔴 LIVE ORDERS OPEN
+</div>
+
+<h1>DCH</h1>
+
+<h2>Cafe & Game Zone</h2>
+
+<div class="hero-line">
+EAT • PLAY • CHILL
+</div>
+
+<p>
+Delicious food, powerful coffee and next-level gaming experience.
+</p>
+
+<div class="hero-btns">
+
+<button class="yellow-btn" onclick="showMenu()">
+🍴 Order Now
+</button>
+
+<button class="border-btn" onclick="showGameZone()">
+🎮 Explore Game Zone
+</button>
+
+</div>
+
+</div>
+
+<div class="stats-strip">
+
+<div class="mini-stat">
+<h3>5000+</h3>
+<span>Orders</span>
+</div>
+
+<div class="mini-stat">
+<h3>1200+</h3>
+<span>Gamers</span>
+</div>
+
+<div class="mini-stat">
+<h3>4.8★</h3>
+<span>Rating</span>
+</div>
+
+<div class="mini-stat">
+<h3>25+</h3>
+<span>Events</span>
+</div>
+
+</div>
+
+</section>
+<section class="stats-container">
+
+    <div class="stat-box">
+        <div class="icon">🛍️</div>
+        <h3>5000+</h3>
+        <span>Orders Served</span>
+    </div>
+
+    <div class="stat-box">
+        <div class="icon">👤</div>
+        <h3>1200+</h3>
+        <span>Happy Gamers</span>
+    </div>
+
+    <div class="stat-box">
+        <div class="icon">⭐</div>
+        <h3>4.8★</h3>
+        <span>Customer Rating</span>
+    </div>
+
+    <div class="stat-box">
+        <div class="icon">🏆</div>
+        <h3>25+</h3>
+        <span>Tournaments</span>
+    </div>
+
+</section>
+  
+
+<!-- GALLERY SECTION -->
+<section id="gallery" class="gallery-wrapper" style="display:block;padding:60px 20px;background:#0d0d0d;">
+
+<h2 style="text-align:center;color:#ffb400;font-size:2.5rem;margin-bottom:30px;">
+📸 Gallery
+</h2>
+
+<div id="home-gallery-section">
+
+<div id="gallery-scroller" class="gallery-container"></div>
+
+</div>
+
+</section>
+
+<!-- CONTACT SECTION -->
+<section id="contact" style="padding:70px 20px;background:#151515;color:white;text-align:center;">
+
+<h2 style="font-size:2.5rem;color:#ffb400;margin-bottom:20px;">
+📞 Contact Us
+</h2>
+
+<p style="font-size:1.1rem;color:#ddd;">
+Near Bharat Petrol Pump, Sanjay Nagar, Dhamnod
+</p>
+
+<p style="font-size:1.2rem;color:#2ecc71;font-weight:bold;">
+📱 8982628715
+</p>
+
+<button 
+onclick="openLocation()" 
+style="margin-top:20px;background:#ffb400;color:black;border:none;padding:14px 25px;border-radius:12px;font-weight:bold;cursor:pointer;"
+>
+Open Location
+</button>
+
+</section>
+  
+</div>
+<!-- GAME ZONE PAGE -->
+<div id="game-page" class="page" style="display:none;">
+
+<header class="header">
+<h1 class="cafe-title">Game Zone</h1>
+
+<div class="nav-actions">
+<button class="nav-button" onclick="showHome()">Home</button>
+<button class="nav-button" onclick="showMenu()">Food Menu</button>
+</div>
+</header>
+
+<section style="padding:120px 20px 60px;background:#0d0d0d;color:white;min-height:100vh;">
+
+<div style="max-width:1200px;margin:auto;">
+
+<h1 style="font-size:4rem;color:#ffb400;text-align:center;margin-bottom:10px;">
+🎮 DCH Game Zone
+</h1>
+
+<p style="text-align:center;font-size:1.2rem;color:#ccc;max-width:700px;margin:0 auto 50px;line-height:1.8;">
+Experience exciting PS4 gaming, VR adventures and chill gaming vibes only at DCH Cafe.
+</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px;">
+
+<div style="background:#1b1b1b;padding:30px;border-radius:22px;text-align:center;">
+<div style="font-size:4rem;">🎮</div>
+<h2 style="color:#ffb400;">PS4 Gaming</h2>
+<p style="color:#ccc;">
+Enjoy multiplayer battles, football games, racing and story mode adventures on PS4.
+</p>
+</div>
+
+<div style="background:#1b1b1b;padding:30px;border-radius:22px;text-align:center;">
+<div style="font-size:4rem;">🕶</div>
+<h2 style="color:#ffb400;">VR Experience</h2>
+<p style="color:#ccc;">
+Feel immersive virtual reality gaming with thrilling experiences and action games.
+</p>
+</div>
+
+<div style="background:#1b1b1b;padding:30px;border-radius:22px;text-align:center;">
+<div style="font-size:4rem;">🍔</div>
+<h2 style="color:#ffb400;">Food + Gaming</h2>
+<p style="color:#ccc;">
+Enjoy delicious cafe food and drinks while gaming with your friends.
+</p>
+</div>
+
+</div>
+
+<div style="text-align:center;margin-top:50px;">
+
+<button onclick="showMenu()" style="background:#ffb400;color:black;border:none;padding:16px 30px;border-radius:14px;font-size:1rem;font-weight:bold;cursor:pointer;">
+Order Food Now
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
 <div id="menu-page" class="page" style="display: none;">
   <header class="header">
     <h1 class="cafe-title">Our Menu</h1>
@@ -372,9 +1079,26 @@
         }
     }
 
-    function showMenu() { document.getElementById('home-page').style.display = 'none'; document.getElementById('menu-page').style.display = 'block'; }
-    function showHome() { document.getElementById('menu-page').style.display = 'none'; document.getElementById('home-page').style.display = 'block'; }
+    function showMenu() {
+document.getElementById('home-page').style.display = 'none';
+document.getElementById('game-page').style.display = 'none';
+document.getElementById('menu-page').style.display = 'block';
+window.scrollTo(0,0);
+}
 
+function showHome() {
+document.getElementById('menu-page').style.display = 'none';
+document.getElementById('game-page').style.display = 'none';
+document.getElementById('home-page').style.display = 'block';
+window.scrollTo(0,0);
+}
+
+function showGameZone() {
+document.getElementById('home-page').style.display = 'none';
+document.getElementById('menu-page').style.display = 'none';
+document.getElementById('game-page').style.display = 'block';
+window.scrollTo(0,0);
+}
     function addToOrder(name, price) {
         const existingItem = cart.find(item => item.name === name);
         if (existingItem) { existingItem.quantity += 1; showToast(`Added another: ${name}`); } 
