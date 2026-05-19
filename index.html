@@ -1233,6 +1233,12 @@ import {
   push
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
+import {
+  getMessaging,
+  getToken,
+  onMessage
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+
 const firebaseConfig = {
 
   apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
@@ -1254,6 +1260,44 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
+
+const messaging = getMessaging(app);
+
+async function initNotifications() {
+
+  try {
+
+    const permission = await Notification.requestPermission();
+
+    if (permission === "granted") {
+
+      const token = await getToken(messaging, {
+        vapidKey: "BKd4krGU47Ns-VsrynqgXGUuKG9EhmQLHXvb1vIgK5GwFTOpQNGR2Gah18F-j5gT9r4lWce-XyppshFHLxcuoug"
+      });
+
+      console.log("FCM TOKEN:", token);
+
+      alert("Notifications Enabled ✅");
+
+    }
+
+  } catch(err) {
+
+    console.log(err);
+
+  }
+
+}
+
+initNotifications();
+
+onMessage(messaging, (payload) => {
+
+  console.log(payload);
+
+  alert(payload.notification.title);
+
+});
 
 window.sendOrderToFirebase = async function(
   cart,
