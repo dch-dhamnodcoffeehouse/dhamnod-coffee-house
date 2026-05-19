@@ -7,13 +7,6 @@
 
 <title>DCH Live Orders</title>
 
-
-<link rel="manifest" href="/manifest.json">
-
-<meta name="theme-color" content="#83977c">
-
-<link rel="apple-touch-icon" href="/icon-192.png">
-
 <style>
 
 body{
@@ -462,7 +455,7 @@ status:"Completed"
 
 onValue(ordersRef, (snapshot) => {
 
-if (Notification.permission === "granted") {
+if (Notification.permission === "granted" && previousCount !== null) {
 
 new Notification("🔔 New Order Received", {
 
@@ -708,24 +701,5 @@ location.reload();
 }
 
 </script>
-
-<script>
-if ('serviceWorker' in navigator) {
-
-window.addEventListener('load', () => {
-
-navigator.serviceWorker.register('/service-worker.js')
-.then((reg) => {
-console.log('SW registered', reg);
-})
-.catch((err) => {
-console.log('SW failed', err);
-});
-
-});
-
-}
-</script>
-
 </body>
 </html>
