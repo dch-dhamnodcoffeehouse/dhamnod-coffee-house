@@ -458,7 +458,7 @@ status:"Completed"
 
 onValue(ordersRef, (snapshot) => {
 
-if (Notification.permission === "granted" && previousCount !== null) {
+if (Notification.permission === "granted") {
 
 new Notification("🔔 New Order Received", {
 
@@ -709,7 +709,7 @@ location.reload();
 
 if ('serviceWorker' in navigator) {
 
-navigator.serviceWorker.register('/service-worker.js')
+navigator.serviceWorker.register('./service-worker.js')
 
 .then(() => {
 
