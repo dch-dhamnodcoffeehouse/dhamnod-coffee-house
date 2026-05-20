@@ -455,21 +455,6 @@ status:"Completed"
 
 onValue(ordersRef, (snapshot) => {
 
-if (Notification.permission === "granted" && previousCount !== null) {
-
-new Notification("🔔 New Order Received", {
-
-body: "New order arrived at DCH Cafe",
-
-icon: "/icon-192.png"
-
-});
-
-orderSound.play();
-
-}
-
-
 activeOrders.innerHTML = '';
 
 completedOrders.innerHTML = '';
