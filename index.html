@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="theme-color" content="#83977c"/>
-   
+
 <title>DCH Cafe | Cafe & Gaming Hub in Dhamnod</title>
 
 <meta name="description" content="DCH Cafe in Dhamnod, District Dhar offers delicious food, coffee, snacks, and exciting gaming zone experiences. Visit us for cafe vibes and gaming fun.">
@@ -25,8 +25,8 @@
 
     <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#83977c">
-    
-    
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
     <style>
@@ -117,7 +117,7 @@ border-bottom:1px solid rgba(255,255,255,0.08);
     margin:0 auto 30px;
     color:#ddd;
 }
-        
+
         /* GALLERY STYLES */
         .gallery-wrapper { margin-top: 40px; margin-bottom: 30px; display: none; } /* Hidden by default */
         .gallery-title { font-family: var(--font-title); font-size: 1.5rem; color: var(--color-espresso); margin-bottom: 15px; padding-left: 10px; border-left: 4px solid var(--color-sage); }
@@ -131,7 +131,7 @@ border-bottom:1px solid rgba(255,255,255,0.08);
         }
         .gallery-container::-webkit-scrollbar { height: 6px; }
         .gallery-container::-webkit-scrollbar-thumb { background: var(--color-sage); border-radius: 3px; }
-        
+
         .gallery-card {
             min-width: 260px;
             height: 180px;
@@ -219,6 +219,7 @@ border-bottom:1px solid rgba(255,255,255,0.08);
 }
         .add-to-order-button{
     background:#ffb400;
+          
     color:black;
     border:none;
     padding:10px 16px;
@@ -285,8 +286,8 @@ font-weight:bold;
 cursor:pointer;
 }
 
-    
-  
+
+
         /* LOADING STATE */
         #loading-message { text-align:center; padding: 40px; font-size: 1.2rem; color: var(--color-sage); }
   html{
@@ -682,7 +683,7 @@ max-width:320px;
 </div>
 
 <div id="home-page" class="page" style="display: block;">
-  
+
 
   <section class="app-hero">
 
@@ -791,7 +792,7 @@ Delicious food, powerful coffee and next-level gaming experience.
     </div>
 
 </section>
-  
+
 
 <!-- GALLERY SECTION -->
 <section id="gallery" class="gallery-wrapper" style="display:block;padding:60px 20px;background:#0d0d0d;">
@@ -831,7 +832,7 @@ Open Location
 </button>
 
 </section>
-  
+
 </div>
 <!-- GAME ZONE PAGE -->
 <div id="game-page" class="page" style="display:none;">
@@ -947,7 +948,7 @@ transition:0.3s;
 </a>
 
 </div> 
-    
+
 </div>
 
 </section>
@@ -955,7 +956,14 @@ transition:0.3s;
 </div>
 <div id="menu-page" class="page" style="display: none;">
   <header class="header">
-    <h1 class="cafe-title">Our Menu</h1>
+    <div style="
+font-size:1.8rem;
+font-weight:900;
+color:#ffb400;
+letter-spacing:2px;
+">
+DCH MENU
+</div>
     <div class="nav-actions">
         <div class="cart-container">
             <button class="cart-button" onclick="showCart()">🛒</button>
@@ -1013,15 +1021,15 @@ transition:0.3s;
     // ==========================================
     // 🔧 YOUR FINAL LINKS ARE SET BELOW
     // ==========================================
-    
+
     // 1. MENU LINK (gid=0)
     const MENU_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQtGo8K35XN0ZpGKzPEHP2j5Vq6f9Sz9kl2hPepya2NSy9UXL13NcMjs-9XnRuIN4HOPWgWCGRCthYh/pub?output=csv";
-    
+
     // 2. GALLERY LINK (gid=605286592)
     const GALLERY_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQysn0Aj4LdO3zWXYRqmyZInqcq0EPS6cPGRlccczj0g9qT3LPo0Kn0424C3XSQ45StT6c8wocbnQy6/pub?gid=605286592&single=true&output=csv";
-    
+
     // ==========================================
-    
+
     let cart = [];
     let menuData = [];
 
@@ -1045,7 +1053,7 @@ transition:0.3s;
                 initGallery(results.data);
             }
         });
-        
+
         updateCartCount();
     };
 
@@ -1053,10 +1061,10 @@ transition:0.3s;
     function initGallery(galleryData) {
         const galleryContainer = document.getElementById('gallery-scroller');
         const gallerySection = document.getElementById('home-gallery-section');
-        
+
         // Check if gallery has items
         if(!galleryData || galleryData.length === 0) return;
-        
+
         gallerySection.style.display = 'block';
         galleryContainer.innerHTML = ''; // Clear existing
 
@@ -1064,7 +1072,7 @@ transition:0.3s;
             // In the separate sheet: 
             // Column A = Name (Caption)
             // Column C = Link (Image URL)
-            
+
             // Note: PapaParse reads headers. Ensure your Gallery sheet headers are "Name" and "Link"
             const imageUrl = item.Link; 
             const caption = item.Name;
@@ -1085,29 +1093,29 @@ transition:0.3s;
     function initMenuSystem() {
         document.getElementById('loading-message').style.display = 'none';
         document.getElementById('category-buttons').style.display = 'grid';
-        
+
         const container = document.getElementById('menu-container');
         container.innerHTML = ''; // Clear container
-        
+
         const categories = [...new Set(menuData.map(item => item.Category))]; 
 
         categories.forEach(cat => {
             if(!cat) return; 
             const catId = cat.toLowerCase().replace(/ /g, '_'); 
-            
+
             const section = document.createElement('div');
             section.id = catId + '-menu';
             section.className = 'menu-item-list hidden';
             section.innerHTML = `<h3 class="menu-item-list-title">${cat.replace('_', ' ').toUpperCase()}</h3>`;
-            
+
             const items = menuData.filter(i => i.Category === cat);
-            
+
             items.forEach((item, index) => {
                 if(!item.Name) return;
                 const card = document.createElement('div');
                 card.className = 'menu-item-card';
                 card.style.animationDelay = `${index * 0.05}s`;
-                
+
                 card.innerHTML = `
                     <div class="item-details">
                         <div class="item-name">${item.Name}</div>
@@ -1115,7 +1123,12 @@ transition:0.3s;
                     </div>
                     <div class="item-price">₹${item.Price}</div>
                     <div class="item-action">
-                        <button class="add-to-order-button" onclick="addToOrder('${item.Name.replace(/'/g, "\\'")}', ${item.Price})">Add</button>
+                   <button
+class="add-to-order-button"
+data-name="${item.Name}"
+onclick="addToOrder('${item.Name.replace(/'/g, "\\'")}', ${item.Price}, this)">
+Add
+</button>
                     </div>
                 `;
                 section.appendChild(card);
@@ -1125,7 +1138,7 @@ transition:0.3s;
     }
 
     // --- NAVIGATION, CART & WHATSAPP LOGIC ---
-    
+
     function showCategory(catName, btn) {
         document.querySelectorAll('.category-button').forEach(b => b.classList.remove('active-category'));
         if(btn) btn.classList.add('active-category');
@@ -1175,19 +1188,49 @@ document.getElementById('menu-page').style.display = 'none';
 document.getElementById('game-page').style.display = 'block';
 window.scrollTo(0,0);
 }
-    function addToOrder(name, price) {
-        const existingItem = cart.find(item => item.name === name);
-        if (existingItem) { existingItem.quantity += 1; showToast(`Added another: ${name}`); } 
-        else { cart.push({ name: name, price: parseInt(price), quantity: 1 }); showToast(`${name} added!`); }
-        updateCartCount();
+    function addToOrder(name, price, btn) {
+
+    const existingItem = cart.find(item => item.name === name);
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+        showToast(`Added another: ${name}`);
+    } else {
+        cart.push({
+            name: name,
+            price: parseInt(price),
+            quantity: 1
+        });
+        showToast(`${name} added!`);
     }
 
-    function updateCartCount() {
-        const count = document.getElementById('cart-count');
-        const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-        count.textContent = total;
-        count.style.opacity = total > 0 ? 1 : 0;
+    updateCartCount();
+
+    const item = cart.find(i => i.name === name);
+
+    if(btn){
+        btn.innerText = `Added (${item.quantity})`;
     }
+}
+
+    function updateCartCount() {
+
+    const count = document.getElementById('cart-count');
+    const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    count.textContent = total;
+    count.style.opacity = total > 0 ? 1 : 0;
+
+    const buyBar = document.getElementById("buyNowBar");
+    const buyCount = document.getElementById("buyNowCount");
+
+    if(total > 0){
+        buyBar.style.display = "block";
+        buyCount.textContent = total;
+    } else {
+        buyBar.style.display = "none";
+    }
+}
 
     function renderCartItems() {
         const list = document.getElementById('cart-items-list');
@@ -1291,7 +1334,7 @@ btn.disabled = false;
 btn.innerText = "Continue Order";
 
 }
-        
+
 
 
     function showToast(msg) { const t = document.getElementById('item-toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
@@ -1299,7 +1342,25 @@ btn.innerText = "Continue Order";
     function showCart() { renderCartItems(); document.getElementById('cart-modal').classList.add('open'); }
     function closeModal() { document.getElementById('cart-modal').classList.remove('open'); }
 </script>
-<script type="module">
+<scriptfunction increaseItem(name, price){
+    addToOrder(name, price);
+    refreshMenuButtons();
+}
+
+function decreaseItem(name){
+    const idx = cart.findIndex(i => i.name === name);
+
+    if(idx > -1){
+        if(cart[idx].quantity > 1){
+            cart[idx].quantity--;
+        }else{
+            cart.splice(idx,1);
+        }
+    }
+
+    updateCartCount();
+    refreshMenuButtons();
+} type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
@@ -1452,7 +1513,33 @@ navigator.serviceWorker
 
 }
     </script>
-    
+<div id="buyNowBar" style="
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#25D366;
+padding:15px;
+display:none;
+z-index:99999;
+box-shadow:0 -4px 15px rgba(0,0,0,0.2);
+">
+
+<button onclick="showCart()" style="
+width:100%;
+background:white;
+color:#25D366;
+border:none;
+padding:14px;
+border-radius:12px;
+font-size:18px;
+font-weight:800;
+cursor:pointer;
+">
+🛒 Buy Now (<span id="buyNowCount">0</span>)
+</button>
+
+</div>
+  
 </body>
 </html>
-
