@@ -1,4 +1,5 @@
 {
+  "id": "/dch-admin",
   "name": "DCH Admin",
   "short_name": "Admin",
   "description": "DCH Live Orders Dashboard",
