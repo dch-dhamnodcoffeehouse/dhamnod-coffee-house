@@ -409,7 +409,6 @@ onValue,
 update
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// Import Cloud Messaging module libraries
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
 
 const firebaseConfig = {
@@ -434,7 +433,6 @@ const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
 
-// Initialize Firebase Cloud Messaging (FCM)
 const messaging = getMessaging(app);
 
 const activeOrders = document.getElementById('activeOrders');
@@ -445,41 +443,55 @@ const ordersRef = ref(db, 'orders');
 
 let previousIds = [];
 
-// Fixed Path Scope Registration Logic
+// Service Worker Registration Helper with Activation Fallback
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        // Enforcing specific repository tracking constraints via relative matching
         navigator.serviceWorker.register('admin-sw.js', { scope: './' })
         .then((registration) => {
-            console.log('Admin Service Worker Registered Successfully');
+            console.log('Admin Service Worker Registered');
             
-            // Validate application server parameters
-            Notification.requestPermission().then((permission) => {
-                if (permission === 'granted') {
-                    getToken(messaging, { 
-                        serviceWorkerRegistration: registration,
-                        vapidKey: 'BKd4krGU47Ns-VsrynqgXGUuKG9EhmQLHXvb1vIgK5GwFTOpQNGR2Gah18F-j5gT9r4lWce-XyppshFHLxcuou' 
-                    })
-                    .then((currentToken) => {
-                        if (currentToken) {
-                            alert("COPY THIS TOKEN:\n\n" + currentToken);
-                            console.log("Your Admin Device Registration Token: ", currentToken);
-                        } else {
-                            alert("No token generated. Check Firebase dashboard configurations.");
+            // TIMING FIX: Define function to handle token request safely once active
+            const requestFcmToken = (activeReg) => {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted') {
+                        getToken(messaging, { 
+                            serviceWorkerRegistration: activeReg,
+                            vapidKey: 'BKd4krGU47Ns-VsrynqgXGUuKG9EhmQLHXvb1vIgK5GwFTOpQNGR2Gah18F-j5gT9r4lWce-XyppshFHLxcuou' 
+                        })
+                        .then((currentToken) => {
+                            if (currentToken) {
+                                alert("COPY THIS TOKEN:\n\n" + currentToken);
+                                console.log("Your Admin Device Registration Token: ", currentToken);
+                            } else {
+                                alert("No token generated. Check Firebase dashboard setup configurations.");
+                            }
+                        }).catch((err) => {
+                            alert("Token Retrieval Error:\n" + err.message);
+                        });
+                    } else {
+                        alert("Notification permission denied.");
+                    }
+                });
+            };
+
+            // If worker is still activating, wait for it to complete
+            if (registration.active) {
+                requestFcmToken(registration);
+            } else {
+                const worker = registration.installing || registration.waiting;
+                if (worker) {
+                    worker.addEventListener('statechange', (e) => {
+                        if (e.target.state === 'activated') {
+                            requestFcmToken(registration);
                         }
-                    }).catch((err) => {
-                        alert("Token Retrieval Error:\n" + err.message);
                     });
-                } else {
-                    alert("Notification permission denied. Please enable it inside site parameters.");
                 }
-            });
+            }
         })
         .catch(err => alert('Service Worker Registration Failed:\n' + err.message));
     });
 }
 
-// Foreground notification capture hook logic
 onMessage(messaging, (payload) => {
     console.log('Message received in dashboard foreground: ', payload);
     playAlarm();
