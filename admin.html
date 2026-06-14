@@ -1,715 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>DCH Live Orders</title>
 <link rel="manifest" href="admin-manifest.json">
 <meta name="theme-color" content="#83977c">
-
 <style>
-
-body{
-    margin:0;
-    padding:20px;
-    background:#111;
-    color:white;
-    font-family:Arial;
-}
-
-.topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:25px;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-.title{
-    font-size:2rem;
-    font-weight:bold;
-}
-
-.live{
-    background:#ff3b3b;
-    padding:8px 14px;
-    border-radius:999px;
-    font-weight:bold;
-}
-
-.sound-btn{
-    background:#2ecc71;
-    color:white;
-    border:none;
-    padding:10px 16px;
-    border-radius:10px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.orders-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:20px;
-}
-
-.order-card{
-    background:#1d1d1d;
-    border-radius:18px;
-    padding:20px;
-    border-left:6px solid orange;
-    box-shadow:0 8px 20px rgba(0,0,0,0.25);
-}
-
-.completed-card{
-    border-left:6px solid #2ecc71;
-    opacity:0.9;
-}
-
-.order-number{
-    font-size:1.5rem;
-    font-weight:bold;
-    margin-bottom:10px;
-    color:#ffd166;
-}
-
-.customer{
-    color:#bbb;
-    margin-bottom:15px;
-    font-size:1rem;
-    line-height:1.7;
-}
-
-.items{
-    margin-bottom:18px;
-    line-height:1.8;
-    color:#f2f2f2;
-}
-
-.total{
-    font-size:1.2rem;
-    font-weight:bold;
-    color:#8fff8f;
-    margin-bottom:10px;
-}
-
-.time{
-    color:#aaa;
-    margin-bottom:15px;
-    font-size:0.9rem;
-}
-
-.status{
-    display:inline-block;
-    padding:8px 14px;
-    border-radius:10px;
-    font-weight:bold;
-    background:orange;
-    color:black;
-    margin-bottom:15px;
-}
-
-.empty{
-    text-align:center;
-    margin-top:40px;
-    color:#aaa;
-    font-size:1.2rem;
-}
-
-.popup{
-    display:none;
-    position:fixed;
-    top:20px;
-    right:20px;
-    background:#2ecc71;
-    color:white;
-    padding:18px 22px;
-    border-radius:14px;
-    font-weight:bold;
-    z-index:9999;
-}
-
-.action-buttons{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-top:15px;
-}
-
-.action-btn{
-    flex:1;
-    border:none;
-    padding:10px;
-    border-radius:10px;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.preparing{
-    background:#3498db;
-}
-
-.ready{
-    background:#2ecc71;
-}
-
-.complete{
-    background:#e74c3c;
-}
-
-.section-title{
-    margin-top:35px;
-    margin-bottom:20px;
-    font-size:1.5rem;
-    font-weight:bold;
-}
-
-@media(max-width:768px){
-
-body{
-    padding:14px;
-}
-
-.title{
-    font-size:1.5rem;
-}
-
-}
-
+body{margin:0;padding:20px;background:#111;color:white;font-family:Arial;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;flex-wrap:wrap;gap:10px;}
+.title{font-size:2rem;font-weight:bold;}
+.live{background:#ff3b3b;padding:8px 14px;border-radius:999px;font-weight:bold;}
+.sound-btn{background:#2ecc71;color:white;border:none;padding:10px 16px;border-radius:10px;font-weight:bold;cursor:pointer;}
+.orders-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;}
+.order-card{background:#1d1d1d;border-radius:18px;padding:20px;border-left:6px solid orange;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
+.completed-card{border-left:6px solid #2ecc71;opacity:0.9;}
+.order-number{font-size:1.5rem;font-weight:bold;margin-bottom:10px;color:#ffd166;}
+.customer{color:#bbb;margin-bottom:15px;font-size:1rem;line-height:1.7;}
+.items{margin-bottom:18px;line-height:1.8;color:#f2f2f2;}
+.total{font-size:1.2rem;font-weight:bold;color:#8fff8f;margin-bottom:10px;}
+.time{color:#aaa;margin-bottom:15px;font-size:0.9rem;}
+.status{display:inline-block;padding:8px 14px;border-radius:10px;font-weight:bold;background:orange;color:black;margin-bottom:15px;}
+.empty{text-align:center;margin-top:40px;color:#aaa;font-size:1.2rem;}
+.popup{display:none;position:fixed;top:20px;right:20px;background:#2ecc71;color:white;padding:18px 22px;border-radius:14px;font-weight:bold;z-index:9999;}
+.action-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px;}
+.action-btn{flex:1;border:none;padding:10px;border-radius:10px;color:white;font-weight:bold;cursor:pointer;}
+.preparing{background:#3498db;}.ready{background:#2ecc71;}.complete{background:#e74c3c;}
+.section-title{margin-top:35px;margin-bottom:20px;font-size:1.5rem;font-weight:bold;}
+@media(max-width:768px){body{padding:14px;}.title{font-size:1.5rem;}}
 </style>
-
 </head>
-
 <body>
 
-<div id="loginScreen" style="
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:#111;
-display:flex;
-justify-content:center;
-align-items:center;
-z-index:99999;
-">
-
-<div style="
-background:#1d1d1d;
-padding:30px;
-border-radius:20px;
-width:90%;
-max-width:380px;
-">
-
-<h1 style="
-text-align:center;
-margin-bottom:25px;
-color:white;
-">
-🔐 DCH Admin Login
-</h1>
-
-<input
-id="adminUser"
-type="text"
-placeholder="Username"
-style="
-width:100%;
-padding:14px;
-margin-bottom:15px;
-border:none;
-border-radius:12px;
-"
->
-
-<input
-id="adminPass"
-type="password"
-placeholder="Password"
-style="
-width:100%;
-padding:14px;
-margin-bottom:20px;
-border:none;
-border-radius:12px;
-"
->
-
-<button
-onclick="loginAdmin()"
-style="
-width:100%;
-padding:14px;
-background:#2ecc71;
-color:white;
-border:none;
-border-radius:12px;
-font-weight:bold;
-"
->
-Login
-</button>
-
-<p id="loginError" style="
-color:red;
-text-align:center;
-display:none;
-margin-top:10px;
-">
-Wrong Username or Password
-</p>
-
+<div id="loginScreen" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#111;display:flex;justify-content:center;align-items:center;z-index:99999;">
+<div style="background:#1d1d1d;padding:30px;border-radius:20px;width:90%;max-width:380px;">
+<h1 style="text-align:center;margin-bottom:25px;color:white;">🔐 DCH Admin Login</h1>
+<input id="adminUser" type="text" placeholder="Username" style="width:100%;padding:14px;margin-bottom:15px;border:none;border-radius:12px;">
+<input id="adminPass" type="password" placeholder="Password" style="width:100%;padding:14px;margin-bottom:20px;border:none;border-radius:12px;">
+<button onclick="loginAdmin()" style="width:100%;padding:14px;background:#2ecc71;color:white;border:none;border-radius:12px;font-weight:bold;">Login</button>
+<p id="loginError" style="color:red;text-align:center;display:none;margin-top:10px;">Wrong Username or Password</p>
+</div>
 </div>
 
-</div>
-
-
-<div class="popup" id="popup">
-🔔 New Order Received
-</div>
+<div class="popup" id="popup">🔔 New Order Received</div>
 
 <div class="topbar">
-
-<div class="title">
-☕ DCH Live Orders
-</div>
-
+<div class="title">☕ DCH Live Orders</div>
 <div style="display:flex; gap:10px; align-items:center;">
-
-<div class="live">
-🔴 LIVE
+<div class="live">🔴 LIVE</div>
+<button class="sound-btn" onclick="enableSound()">🔔 Enable Sound</button>
+<button class="sound-btn" onclick="window.location.href='analytics.html'">📊 Analytics</button>
+<button class="sound-btn" onclick="logoutAdmin()">🚪 Logout</button>
+</div>
 </div>
 
-<button class="sound-btn" onclick="enableSound()">
-🔔 Enable Sound
-</button>
-
-<button class="sound-btn"
-onclick="window.location.href='analytics.html'">
-📊 Analytics
-</button>
-
-<button class="sound-btn"
-onclick="logoutAdmin()">
-🚪 Logout
-</button>
-</div>
-
-</div>
-
-<div class="section-title">
-🟠 Active Orders
-</div>
-
-<div class="orders-grid" id="activeOrders">
-
-<div class="empty">
-Waiting for live orders...
-</div>
-
-</div>
-
-<div class="section-title">
-✅ Completed Orders
-</div>
-
+<div class="section-title">🟠 Active Orders</div>
+<div class="orders-grid" id="activeOrders"><div class="empty">Waiting for live orders...</div></div>
+<div class="section-title">✅ Completed Orders</div>
 <div class="orders-grid" id="completedOrders"></div>
 
 <audio id="orderSound" preload="auto">
 <source src="alarm.ogg" type="audio/ogg">
-Your browser does not support audio.
 </audio>
 
 <script>
-
 let soundEnabled = false;
-
 function enableSound(){
-
 const sound = document.getElementById('orderSound');
-
-sound.volume = 1;
-
-sound.currentTime = 0;
-
-sound.play()
-.then(()=>{
-
-sound.pause();
-
-sound.currentTime = 0;
-
-soundEnabled = true;
-
-if ("Notification" in window) {
-    Notification.requestPermission();
-}
-
+sound.volume = 1; sound.currentTime = 0;
+sound.play().then(()=>{
+sound.pause(); sound.currentTime = 0; soundEnabled = true;
+if ("Notification" in window) { Notification.requestPermission(); }
 alert("🔔 System Sound & Alerts Enabled ✅");
-
-})
-.catch(err=>{
-
-console.log(err);
-
-alert("Tap again to allow sound");
-
-});
-
+}).catch(err=>{ alert("Tap again to allow sound"); });
 }
 
 function playAlarm(){
-
 if(!soundEnabled) return;
-
 const sound = document.getElementById('orderSound');
-
-sound.volume = 1;
-
-sound.currentTime = 0;
-
+sound.volume = 1; sound.currentTime = 0;
 sound.play().catch(err => console.log(err));
-
-setTimeout(()=>{
-
-sound.currentTime = 0;
-
-sound.play().catch(err => console.log(err));
-
-},3000);
-
 }
 
 function showPopup(){
-
 const popup = document.getElementById('popup');
-
 popup.style.display = 'block';
-
-setTimeout(()=>{
-
-popup.style.display = 'none';
-
-},4000);
-
+setTimeout(()=>{ popup.style.display = 'none'; },4000);
 }
-
 </script>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getDatabase,
-ref,
-onValue,
-update
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, update, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
 
 const firebaseConfig = {
-
-apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
-
-authDomain: "dashboard-dch-a9904.firebaseapp.com",
-
-databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
-
-projectId: "dashboard-dch-a9904",
-
-storageBucket: "dashboard-dch-a9904.firebasestorage.app",
-
-messagingSenderId: "413889905968",
-
-appId: "1:413889905968:web:747b9a22aa95536f9074f5"
-
+  apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
+  authDomain: "dashboard-dch-a9904.firebaseapp.com",
+  databaseURL: "https://dashboard-dch-a9904-default-rtdb.firebaseio.com",
+  projectId: "dashboard-dch-a9904",
+  storageBucket: "dashboard-dch-a9904.firebasestorage.app",
+  messagingSenderId: "413889905968",
+  appId: "1:413889905968:web:747b9a22aa95536f9074f5"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getDatabase(app);
+const messaging = getMessaging(app);
 
 const activeOrders = document.getElementById('activeOrders');
-
 const completedOrders = document.getElementById('completedOrders');
-
 const ordersRef = ref(db, 'orders');
-
 let previousIds = [];
 
-// Clean Service Worker Registration (Kept for offline assets caching ONLY)
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('admin-sw.js', { scope: './' })
-        .then(() => console.log('Admin Service Worker Active'))
-        .catch(err => console.log('SW Registration Bypassed:', err.message));
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('firebase-messaging-sw.js')
+    .then((registration) => {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          getToken(messaging, { 
+            serviceWorkerRegistration: registration,
+            vapidKey: 'BEdVrD3csxMzJ-sEoB5DTmyBNZNsnHiZsg88oVY3M2RYPCsX93ELaMBRPprsUltaWRju5HEGFG7ye1H8Mll7I9w' 
+          })
+          .then((currentToken) => {
+            if (currentToken) {
+              const safeTokenKey = currentToken.replace(/[.#$/\[\]]/g, "_");
+              set(ref(db, `admin_tokens/${safeTokenKey}`), {
+                token: currentToken,
+                lastUpdated: new Date().toISOString()
+              });
+            }
+          }).catch((err) => { console.log('Token error:', err); });
+        }
+      });
     });
+  });
 }
 
-window.updateStatus = async function(orderId,status){
-
-await update(ref(db, `orders/${orderId}`),{
-status:status
+onMessage(messaging, (payload) => {
+  playAlarm();
+  showPopup();
 });
 
+window.updateStatus = async function(orderId,status){
+  await update(ref(db, `orders/${orderId}`),{status:status});
 }
 
 window.completeOrder = async function(orderId){
-
-await update(ref(db, `orders/${orderId}`),{
-status:"Completed"
-});
-
+  await update(ref(db, `orders/${orderId}`),{status:"Completed"});
 }
 
-// DIRECT REALTIME DATABASE LISTENER LOOP
 onValue(ordersRef, (snapshot) => {
+  activeOrders.innerHTML = '';
+  completedOrders.innerHTML = '';
+  const data = snapshot.val();
+  if(!data) { activeOrders.innerHTML = `<div class="empty">No live orders yet...</div>`; return; }
 
-activeOrders.innerHTML = '';
+  const ordersArray = Object.entries(data).reverse();
+  const currentIds = ordersArray.map(order => order[0]);
+  const newOrderArrived = currentIds.some(id => !previousIds.includes(id));
 
-completedOrders.innerHTML = '';
+  if(newOrderArrived && previousIds.length > 0){
+    playAlarm();
+    showPopup();
+  }
+  previousIds = currentIds;
 
-const data = snapshot.val();
+  const activeList = []; const completedList = [];
+  ordersArray.forEach(order => {
+    if(order[1].status === "Completed"){ completedList.push(order); }else{ activeList.push(order); }
+  });
 
-if(!data){
+  if(activeList.length === 0){ activeOrders.innerHTML = `<div class="empty">No active orders</div>`; }
+  if(completedList.length === 0){ completedOrders.innerHTML = `<div class="empty">No completed orders</div>`; }
 
-activeOrders.innerHTML = `
-<div class="empty">
-No live orders yet...
-</div>
-`;
+  activeList.forEach(([id, order]) => {
+    const card = document.createElement('div');
+    card.className = 'order-card';
+    let statusColor = "orange";
+    if(order.status === "Preparing") statusColor = "#3498db";
+    if(order.status === "Ready") statusColor = "#2ecc71";
 
-return;
+    card.innerHTML = `
+      <div class="order-number">#${order.token || id.slice(-4)}</div>
+      <div class="customer">👤 ${order.customer}<br>📞 ${order.phone || "No Number"}</div>
+      <div class="items">${order.items.map(item => `• ${item.name} x${item.quantity}`).join('<br>')}</div>
+      <div class="total">₹${order.total}</div>
+      <div class="time">🕒 ${order.time || "No Time"}</div>
+      <div class="status" style="background:${statusColor};">${order.status || "Pending"}</div>
+      <div class="action-buttons">
+        <button class="action-btn preparing" onclick="updateStatus('${id}','Preparing')">Preparing</button>
+        <button class="action-btn ready" onclick="updateStatus('${id}','Ready')">Ready</button>
+        <button class="action-btn complete" onclick="completeOrder('${id}')">Complete</button>
+      </div>
+    `;
+    activeOrders.appendChild(card);
+  });
 
-}
-
-const ordersArray = Object.entries(data).reverse();
-
-const currentIds = ordersArray.map(order => order[0]);
-
-// INSTANT ALERT LOGIC
-if (previousIds.length > 0) {
-    const newOrderArrived = currentIds.some(id => !previousIds.includes(id));
-    
-    if(newOrderArrived){
-        playAlarm();
-        showPopup();
-
-        if ("Notification" in window && Notification.permission === "granted") {
-            new Notification("☕ DCH Kitchen Alert!", {
-                body: "New live order received! Check dashboard.",
-                icon: "./icon-192.png",
-                tag: "dch-direct-order"
-            });
-        }
-    }
-}
-
-previousIds = currentIds;
-
-const activeList = [];
-const completedList = [];
-
-ordersArray.forEach(order => {
-
-if(order[1].status === "Completed"){
-completedList.push(order);
-}else{
-activeList.push(order);
-}
-
+  completedList.forEach(([id, order]) => {
+    const card = document.createElement('div');
+    card.className = 'order-card completed-card';
+    card.innerHTML = `
+      <div class="order-number">#${order.token || id.slice(-4)}</div>
+      <div class="customer">👤 ${order.customer}<br>📞 ${order.phone || "No Number"}</div>
+      <div class="items">${order.items.map(item => `• ${item.name} x${item.quantity}`).join('<br>')}</div>
+      <div class="total">₹${order.total}</div>
+      <div class="time">🕒 ${order.time || "No Time"}</div>
+      <div class="status" style="background:#2ecc71;">Completed</div>
+    `;
+    completedOrders.appendChild(card);
+  });
 });
-
-if(activeList.length === 0){
-
-activeOrders.innerHTML = `
-<div class="empty">
-No active orders
-</div>
-`;
-
-}
-
-if(completedList.length === 0){
-
-completedOrders.innerHTML = `
-<div class="empty">
-No completed orders
-</div>
-`;
-
-}
-
-activeList.forEach(([id, order]) => {
-
-const card = document.createElement('div');
-
-card.className = 'order-card';
-
-let statusColor = "orange";
-
-if(order.status === "Preparing"){
-statusColor = "#3498db";
-}
-
-if(order.status === "Ready"){
-statusColor = "#2ecc71";
-}
-
-card.innerHTML = `
-
-<div class="order-number">
-#${order.token || id.slice(-4)}
-</div>
-
-<div class="customer">
-👤 ${order.customer}<br>
-📞 ${order.phone || "No Number"}
-</div>
-
-<div class="items">
-${order.items.map(item =>
-`• ${item.name} x${item.quantity}`
-).join('<br>')}
-</div>
-
-<div class="total">
-₹${order.total}
-</div>
-
-<div class="time">
-🕒 ${order.time || "No Time"}
-</div>
-
-<div class="status" style="background:${statusColor};">
-${order.status || "Pending"}
-</div>
-
-<div class="action-buttons">
-
-<button class="action-btn preparing"
-onclick="updateStatus('${id}','Preparing')">
-Preparing
-</button>
-
-<button class="action-btn ready"
-onclick="updateStatus('${id}','Ready')">
-Ready
-</button>
-
-<button class="action-btn complete"
-onclick="completeOrder('${id}')">
-Complete
-</button>
-
-</div>
-
-`;
-
-activeOrders.appendChild(card);
-
-});
-
-completedList.forEach(([id, order]) => {
-
-const card = document.createElement('div');
-
-card.className = 'order-card completed-card';
-
-card.innerHTML = `
-
-<div class="order-number">
-#${order.token || id.slice(-4)}
-</div>
-
-<div class="customer">
-👤 ${order.customer}<br>
-📞 ${order.phone || "No Number"}
-</div>
-
-<div class="items">
-${order.items.map(item =>
-`• ${item.name} x${item.quantity}`
-).join('<br>')}
-</div>
-
-<div class="total">
-₹${order.total}
-</div>
-
-<div class="time">
-🕒 ${order.time || "No Time"}
-</div>
-
-<div class="status" style="background:#2ecc71;">
-Completed
-</div>
-
-`;
-
-completedOrders.appendChild(card);
-
-});
-
-});
-
 </script>
 <script>
-
-const ADMIN_USERNAME = "dchdhamnod";
-
-const ADMIN_PASSWORD = "dch71225";
-
+const ADMIN_USERNAME = "dchdhamnod"; const ADMIN_PASSWORD = "dch71225";
 function loginAdmin(){
-
-const user = document.getElementById("adminUser").value;
-
-const pass = document.getElementById("adminPass").value;
-
-if(
-user === ADMIN_USERNAME &&
-pass === ADMIN_PASSWORD
-){
-
-localStorage.setItem("dchAdminLoggedIn","true");
-
-document.getElementById("loginScreen").style.display = "none";
-
-}else{
-
-document.getElementById("loginError").style.display = "block";
-
+const user = document.getElementById("adminUser").value; const pass = document.getElementById("adminPass").value;
+if(user === ADMIN_USERNAME && pass === ADMIN_PASSWORD){
+localStorage.setItem("dchAdminLoggedIn","true"); document.getElementById("loginScreen").style.display = "none";
+}else{ document.getElementById("loginError").style.display = "block"; }
 }
-
-}
-
 window.onload = function(){
-
 const loggedIn = localStorage.getItem("dchAdminLoggedIn");
-
-if(loggedIn === "true"){
-
-document.getElementById("loginScreen").style.display = "none";
-
-}
-
+if(loggedIn === "true"){ document.getElementById("loginScreen").style.display = "none"; }
 };
-
-function logoutAdmin(){
-
-localStorage.removeItem("dchAdminLoggedIn");
-
-location.reload();
-
-}
-
+function logoutAdmin(){ localStorage.removeItem("dchAdminLoggedIn"); location.reload(); }
 </script>
-
 </body>
 </html>
