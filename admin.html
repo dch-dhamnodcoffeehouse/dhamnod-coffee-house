@@ -347,7 +347,12 @@ sound.currentTime = 0;
 
 soundEnabled = true;
 
-alert("🔔 Sound Enabled ✅");
+// Ask for standard local browser notification permissions right away
+if ("Notification" in window) {
+    Notification.requestPermission();
+}
+
+alert("🔔 System Sound & Alerts Enabled ✅");
 
 })
 .catch(err=>{
@@ -443,38 +448,27 @@ const ordersRef = ref(db, 'orders');
 
 let previousIds = [];
 
-// Service Worker Registration Helper with Activation Fallback
+// Standard Service Worker Registration 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('admin-sw.js', { scope: './' })
         .then((registration) => {
             console.log('Admin Service Worker Registered');
             
-            // Define function to handle token request safely once active
             const requestFcmToken = (activeReg) => {
-                Notification.requestPermission().then((permission) => {
-                    if (permission === 'granted') {
-                        getToken(messaging, { 
-                            serviceWorkerRegistration: activeReg,
-                            vapidKey: 'BEdVrD3csxMzJ-sEoB5DTmyBNZNsnHiZsg88oVY3M2RYPCsX93ELaMBRPprsUltaWRju5HEGFG7ye1H8Mll7I9w' 
-                        })
-                        .then((currentToken) => {
-                            if (currentToken) {
-                                alert("COPY THIS TOKEN:\n\n" + currentToken);
-                                console.log("Your Admin Device Registration Token: ", currentToken);
-                            } else {
-                                alert("No token generated. Check Firebase dashboard setup configurations.");
-                            }
-                        }).catch((err) => {
-                            alert("Token Retrieval Error:\n" + err.message);
-                        });
-                    } else {
-                        alert("Notification permission denied.");
+                getToken(messaging, { 
+                    serviceWorkerRegistration: activeReg,
+                    vapidKey: 'BEdVrD3csxMzJ-sEoB5DTmyBNZNsnHiZsg88oVY3M2RYPCsX93ELaMBRPprsUltaWRju5HEGFG7ye1H8Mll7I9w' 
+                })
+                .then((currentToken) => {
+                    if (currentToken) {
+                        console.log("FCM Token Active: ", currentToken);
                     }
+                }).catch((err) => {
+                    console.log("Background token tracking offline, operating on fallback listener: ", err.message);
                 });
             };
 
-            // If worker is still activating, wait for it to complete
             if (registration.active) {
                 requestFcmToken(registration);
             } else {
@@ -487,13 +481,12 @@ if ('serviceWorker' in navigator) {
                     });
                 }
             }
-        })
-        .catch(err => alert('Service Worker Registration Failed:\n' + err.message));
+        }).catch(err => console.log('Service Worker Registration Bypassed:', err.message));
     });
 }
 
 onMessage(messaging, (payload) => {
-    console.log('Message received in dashboard foreground: ', payload);
+    console.log('Message received in foreground: ', payload);
     playAlarm();
     showPopup();
 });
@@ -514,6 +507,7 @@ status:"Completed"
 
 }
 
+// DIRECT REALTIME DATABASE FALLBACK LISTENER LOOP
 onValue(ordersRef, (snapshot) => {
 
 activeOrders.innerHTML = '';
@@ -538,14 +532,26 @@ const ordersArray = Object.entries(data).reverse();
 
 const currentIds = ordersArray.map(order => order[0]);
 
-const newOrderArrived = currentIds.some(id => !previousIds.includes(id));
+// DIRECT INSTANT ALERT TRIGGER
+if (previousIds.length > 0) {
+    const newOrderArrived = currentIds.some(id => !previousIds.includes(id));
+    
+    if(newOrderArrived){
+        // 1. Trigger the audio alarm track instantly
+        playAlarm();
 
-if(newOrderArrived){
+        // 2. Flash the local UI green banner
+        showPopup();
 
-playAlarm();
-
-showPopup();
-
+        // 3. Force a Direct Browser System Notification alert as a secure layout backup
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("☕ DCH Kitchen Alert!", {
+                body: "New live order received! Check dashboard.",
+                icon: "./icon-192.png",
+                tag: "dch-direct-order"
+            });
+        }
+    }
 }
 
 previousIds = currentIds;
