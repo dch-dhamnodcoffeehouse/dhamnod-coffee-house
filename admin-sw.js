@@ -35,7 +35,7 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-// 4. YOUR CORE OFFLINE CACHE MANAGEMENT
+// 4. OFFLINE CACHE MANAGEMENT & INSTANT ACTIVATION FIX
 const CACHE_NAME = "dch-admin-v1";
 const urlsToCache = [
   "./",
@@ -47,7 +47,8 @@ const urlsToCache = [
 ];
 
 self.addEventListener("install", event => {
-  self.skipWaiting();
+  // CRITICAL FIX: Forces the new service worker to kick out the old version immediately
+  self.skipWaiting(); 
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
@@ -65,6 +66,7 @@ self.addEventListener("activate", event => {
       )
     )
   );
+  // Forces the service worker to take control of the page immediately
   self.clients.claim();
 });
 
