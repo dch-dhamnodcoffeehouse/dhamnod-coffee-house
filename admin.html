@@ -445,14 +445,14 @@ const ordersRef = ref(db, 'orders');
 
 let previousIds = [];
 
-// Push Registration Logic with Mobile-Friendly Alert Hook
+// Push Registration Logic with FORCED Alert Popups
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./admin-sw.js')
         .then((registration) => {
             console.log('Admin Service Worker Registered Successfully');
             
-            // Request device push notification parameters
+            // Request/Verify notification parameters
             Notification.requestPermission().then((permission) => {
                 if (permission === 'granted') {
                     // Pasted your exact Public VAPID Key here
@@ -462,19 +462,23 @@ if ('serviceWorker' in navigator) {
                     })
                     .then((currentToken) => {
                         if (currentToken) {
-                            // Mobile alert shortcut to let you copy your registration token on your screen
+                            // FORCED ALERT: Shows up even if notifications were already allowed!
                             alert("COPY THIS TOKEN:\n\n" + currentToken);
                             console.log("Your Admin Device Registration Token: ", currentToken);
                         } else {
-                            console.log('No registration token available. Request permission to generate one.');
+                            alert("No registration token generated. Verify your Firebase setup.");
                         }
                     }).catch((err) => {
+                        // Catches any secure environment or cross-domain registration blocks
+                        alert("Token Retrieval Error:\n" + err.message);
                         console.error('An error occurred while retrieving token. ', err);
                     });
+                } else {
+                    alert("Notification permission denied. Enable it in your browser site settings.");
                 }
             });
         })
-        .catch(err => console.log('Service Worker registration failed: ', err));
+        .catch(err => alert('Service Worker registration failed: ' + err.message));
     });
 }
 
