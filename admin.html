@@ -347,7 +347,6 @@ sound.currentTime = 0;
 
 soundEnabled = true;
 
-// Ask for standard local browser notification permissions right away
 if ("Notification" in window) {
     Notification.requestPermission();
 }
@@ -414,8 +413,6 @@ onValue,
 update
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
-
 const firebaseConfig = {
 
 apiKey: "AIzaSyALDwRVTLuTV12PYnk1HF5eg-sztH2Bb0s",
@@ -438,8 +435,6 @@ const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
 
-const messaging = getMessaging(app);
-
 const activeOrders = document.getElementById('activeOrders');
 
 const completedOrders = document.getElementById('completedOrders');
@@ -448,48 +443,14 @@ const ordersRef = ref(db, 'orders');
 
 let previousIds = [];
 
-// Standard Service Worker Registration 
+// Clean Service Worker Registration (Kept for offline assets caching ONLY)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('admin-sw.js', { scope: './' })
-        .then((registration) => {
-            console.log('Admin Service Worker Registered');
-            
-            const requestFcmToken = (activeReg) => {
-                getToken(messaging, { 
-                    serviceWorkerRegistration: activeReg,
-                    vapidKey: 'BEdVrD3csxMzJ-sEoB5DTmyBNZNsnHiZsg88oVY3M2RYPCsX93ELaMBRPprsUltaWRju5HEGFG7ye1H8Mll7I9w' 
-                })
-                .then((currentToken) => {
-                    if (currentToken) {
-                        console.log("FCM Token Active: ", currentToken);
-                    }
-                }).catch((err) => {
-                    console.log("Background token tracking offline, operating on fallback listener: ", err.message);
-                });
-            };
-
-            if (registration.active) {
-                requestFcmToken(registration);
-            } else {
-                const worker = registration.installing || registration.waiting;
-                if (worker) {
-                    worker.addEventListener('statechange', (e) => {
-                        if (e.target.state === 'activated') {
-                            requestFcmToken(registration);
-                        }
-                    });
-                }
-            }
-        }).catch(err => console.log('Service Worker Registration Bypassed:', err.message));
+        .then(() => console.log('Admin Service Worker Active'))
+        .catch(err => console.log('SW Registration Bypassed:', err.message));
     });
 }
-
-onMessage(messaging, (payload) => {
-    console.log('Message received in foreground: ', payload);
-    playAlarm();
-    showPopup();
-});
 
 window.updateStatus = async function(orderId,status){
 
@@ -507,7 +468,7 @@ status:"Completed"
 
 }
 
-// DIRECT REALTIME DATABASE FALLBACK LISTENER LOOP
+// DIRECT REALTIME DATABASE LISTENER LOOP
 onValue(ordersRef, (snapshot) => {
 
 activeOrders.innerHTML = '';
@@ -532,18 +493,14 @@ const ordersArray = Object.entries(data).reverse();
 
 const currentIds = ordersArray.map(order => order[0]);
 
-// DIRECT INSTANT ALERT TRIGGER
+// INSTANT ALERT LOGIC
 if (previousIds.length > 0) {
     const newOrderArrived = currentIds.some(id => !previousIds.includes(id));
     
     if(newOrderArrived){
-        // 1. Trigger the audio alarm track instantly
         playAlarm();
-
-        // 2. Flash the local UI green banner
         showPopup();
 
-        // 3. Force a Direct Browser System Notification alert as a secure layout backup
         if ("Notification" in window && Notification.permission === "granted") {
             new Notification("☕ DCH Kitchen Alert!", {
                 body: "New live order received! Check dashboard.",
