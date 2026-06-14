@@ -448,7 +448,7 @@ let previousIds = [];
 // Push Registration Logic with FORCED Alert Popups
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./admin-sw.js')
+        navigator.serviceWorker.register('/admin-sw.js')
         .then((registration) => {
             console.log('Admin Service Worker Registered Successfully');
             
