@@ -450,13 +450,13 @@ if ('serviceWorker' in navigator) {
         .then((registration) => {
             console.log('Admin Service Worker Registered');
             
-            // TIMING FIX: Define function to handle token request safely once active
+            // Define function to handle token request safely once active
             const requestFcmToken = (activeReg) => {
                 Notification.requestPermission().then((permission) => {
                     if (permission === 'granted') {
                         getToken(messaging, { 
                             serviceWorkerRegistration: activeReg,
-                            vapidKey: 'BKd4krGU47Ns-VsrynqgXGUuKG9EhmQLHXvb1vIgK5GwFTOpQNGR2Gah18F-j5gT9r4lWce-XyppshFHLxcuou' 
+                            vapidKey: 'BEdVrD3csxMzJ-sEoB5DTmyBNZNsnHiZsg88oVY3M2RYPCsX93ELaMBRPprsUltaWRju5HEGFG7ye1H8Mll7I9w' 
                         })
                         .then((currentToken) => {
                             if (currentToken) {
